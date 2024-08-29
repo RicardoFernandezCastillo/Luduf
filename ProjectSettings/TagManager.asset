@@ -8,6 +8,8 @@ TagManager:
   - Wall
   - OuterCorner
   - Room
+  - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX

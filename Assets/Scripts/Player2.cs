@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player2 : MonoBehaviour
 {
 	public float moveSpeed = 5f; // Velocidad de movimiento del jugador
 	public float turnSpeed = 720f; // Velocidad de rotación del jugador
