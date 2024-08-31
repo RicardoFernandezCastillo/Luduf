@@ -35,12 +35,32 @@ public class Player : MonoBehaviour
     public float timeToRechargeDash = 5f;
     private float timerDash = 0f;
 
+
+
+    NewInputSystem inputActions;//--
+    Vector2 dir = Vector2.zero;
+
+
     private void Awake()
     {
         //rb = GetComponent<Rigidbody>();
-    }
+        inputActions = new NewInputSystem();//--
+        inputActions.Player.Movement.performed += ctx => dir = ctx.ReadValue<Vector2>();
+        inputActions.Player.Movement.canceled += ctx => dir = Vector2.zero;
+		inputActions.Player.Shoot.performed += ctx => Shoot(); //Se ejecuta cada ves que dispare
+	}
 
-    void Start()
+	private void OnEnable()
+	{
+		inputActions.Enable();
+	}
+
+	private void OnDisable()
+	{
+		inputActions.Disable();
+	}
+
+	void Start()
     {
         
     }
@@ -49,7 +69,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         Movement();
-        Shoot();
+        //Shoot();
         Aim();
 
 
@@ -99,17 +119,17 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-        rb.velocity = new Vector3(x, 0, y) * speed;
+        //float x = Input.GetAxis("Horizontal");
+        //float y = Input.GetAxis("Vertical");
+        rb.velocity = new Vector3(dir.x * speed, 0, dir.y * speed);
 
-        //Normalizar la velocidad para que el jugador no se mueva más rápido en diagonal
+        //Normalizar la velocidad para que el jugador no se mueva mï¿½s rï¿½pido en diagonal
         //if (rb.velocity.magnitude > 1)
         //{
         //    rb.velocity = rb.velocity.normalized;
         //}
 
-        // Agregar el boton tab para que el jugador haga un dash hacia la dirección en la que se esta moviendo
+        // Agregar el boton tab para que el jugador haga un dash hacia la direcciï¿½n en la que se esta moviendo
         if (Input.GetKeyDown(KeyCode.Tab) && cuantityDashes>0)
         {
             rb.AddForce(rb.velocity * 60, ForceMode.Impulse);
@@ -136,7 +156,7 @@ public class Player : MonoBehaviour
         {
             Instantiate(bulletPrefab, firePoint.position, transform.rotation);
         }
-
+         
         if (Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(1f);
@@ -158,7 +178,7 @@ public class Player : MonoBehaviour
         {
             enemies.Add(go.GetComponent<Enemy>());
         }
-        // Busca el enemigo más cercano y menos vida
+        // Busca el enemigo mï¿½s cercano y menos vida
         Enemy enemyToAttack = null;
         float minDistance = 15f;
         foreach (Enemy e in enemies)
@@ -203,7 +223,5 @@ public class Player : MonoBehaviour
         }
         XpCheck();
     }
-
-
 
 }

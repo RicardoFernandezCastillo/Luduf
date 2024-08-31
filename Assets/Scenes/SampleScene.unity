@@ -211,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 705507993}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 4.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -341,7 +341,7 @@ MonoBehaviour:
   RoomType:
   - {fileID: 8793532146489598755, guid: 69f30360a5000e0449a4e03b34a22331, type: 3}
   - {fileID: 8793532146489598755, guid: d9bff50ea3f970f42bbcc3aaa87940de, type: 3}
-  size: {x: 5, y: 12}
+  size: {x: 5, y: 10}
   startPos: 0
   offset: {x: 10, y: 10}
   startRoom: {fileID: 8793532146489598755, guid: a7fc6382f1e30dc48b5b93e46e3b64df, type: 3}

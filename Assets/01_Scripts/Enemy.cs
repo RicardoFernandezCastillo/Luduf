@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
-    // Variables públicas configurables
+    // Variables pï¿½blicas configurables
     [Header("Stats")]
     public float speed = 6f;
     public float life = 2f;
@@ -108,7 +108,7 @@ public class Enemy : MonoBehaviour
                 if (canAttack && timer >= timeBtwAttack)
                 {
                     timer = 0f;
-                    Debug.Log("El Lobo Atacó");
+                    Debug.Log("El Lobo Atacï¿½");
                 }
                 else
                 {
@@ -151,7 +151,7 @@ public class Enemy : MonoBehaviour
                 if (canAttack && timer >= timeBtwAttack)
                 {
                     timer = 0f;
-                    Debug.Log("El Vampiro Atacó");
+                    Debug.Log("El Vampiro Atacï¿½");
                 }
                 else
                 {
