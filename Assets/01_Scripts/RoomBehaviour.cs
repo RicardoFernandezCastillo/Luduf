@@ -17,8 +17,10 @@ public class RoomBehaviour : MonoBehaviour
 	public enum RoomType
 	{
 		StartRoom,
-		NormalRoom,
-		SpiderRoom,
+		NormalRoom, //generaar cofres aleatorios
+		SpiderRoom, //Inst
+		VampireRoom,
+		WolfRoom,
 		BossRoom
 	}
 

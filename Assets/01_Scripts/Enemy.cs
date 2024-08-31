@@ -88,8 +88,34 @@ public class Enemy : MonoBehaviour
                 WolfBehaviour();
                 break;
             case EnemyType.Bat:
-                //SniperBehaviour();
+                BatBehaviour();
                 break;
+        }
+    }
+
+    private void BatBehaviour()
+    {
+        if (Vector3.Distance(transform.position, target.position) < 15f && Vector3.Distance(transform.position, target.position) > 10f)
+        {
+            Vector3 dir = target.position - transform.position;
+            float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+
+
+        }
+        else if (Vector3.Distance(transform.position, target.position) < 10f)
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+
+            if (timer >= timeBtwAttack)
+            {
+                timer = 0f;
+                Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+            }
+            else
+            {
+                timer += Time.deltaTime;
+            }
         }
     }
 
@@ -105,6 +131,14 @@ public class Enemy : MonoBehaviour
                 float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0, angle, 0);
 
+
+                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            }
+            //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
+            else if (Vector3.Distance(transform.position, target.position) < 3f)
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+
                 if (canAttack && timer >= timeBtwAttack)
                 {
                     timer = 0f;
@@ -114,12 +148,6 @@ public class Enemy : MonoBehaviour
                 {
                     timer += Time.deltaTime;
                 }
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-            }
-            //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
-            else if (Vector3.Distance(transform.position, target.position) < 3f)
-            {
-                transform.rotation = Quaternion.Euler(0, 180, 0);
             }
         }
     }
@@ -148,6 +176,14 @@ public class Enemy : MonoBehaviour
                 float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0, angle, 0);
 
+
+                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            }
+            //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
+            else if (Vector3.Distance(transform.position, target.position) < 3f)
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+
                 if (canAttack && timer >= timeBtwAttack)
                 {
                     timer = 0f;
@@ -157,12 +193,6 @@ public class Enemy : MonoBehaviour
                 {
                     timer += Time.deltaTime;
                 }
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-            }
-            //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
-            else if (Vector3.Distance(transform.position, target.position) < 3f)
-            {
-                transform.rotation = Quaternion.Euler(0, 180, 0);
             }
         }
     }
@@ -211,29 +241,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void SniperBehaviour()
-    {
-        if (Vector3.Distance(transform.position, target.position) < 15f)
-        {
-            Vector3 dir = target.position - transform.position;
-            float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, angle, 0);
-
-            if (timer >= timeBtwAttack)
-            {
-                timer = 0f;
-                Instantiate(bulletPrefab, firePoint.position, transform.rotation);
-            }
-            else
-            {
-                timer += Time.deltaTime;
-            }
-        }
-        else
-        {
-            Movement();
-        }
-    }
 
     public void TakeDamage(float damage)
     {

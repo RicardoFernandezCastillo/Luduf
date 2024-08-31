@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
         inputActions.Player.Movement.performed += ctx => dir = ctx.ReadValue<Vector2>();
         inputActions.Player.Movement.canceled += ctx => dir = Vector2.zero;
 		inputActions.Player.Shoot.performed += ctx => Shoot(); //Se ejecuta cada ves que dispare
+
 	}
 
 	private void OnEnable()
@@ -71,6 +72,7 @@ public class Player : MonoBehaviour
         Movement();
         //Shoot();
         Aim();
+        Pruebitas();
 
 
         if (healthSlider.value != easeHealthSlider.value)
@@ -83,10 +85,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HealthCheck()
+    public void HealthCheck()
     {
-        // healthSlider.value es un valor entre 0 y 1
-        // cambiar el valor si los valores no coinciden
         if (health<=0)
         {
             healthSlider.value = 0;
@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
         //}
 
     }
-    private void XpCheck()
+    public void XpCheck()
     {
         //if (lvlSlider.value != exp / maxExp)
         //{
@@ -117,46 +117,46 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Movement()
+	void Movement()
+	{
+		// Mueve al jugador en la dirección del joystick
+		rb.velocity = new Vector3(dir.x * speed, 0, dir.y * speed);
+
+		// Si hay movimiento, rota al jugador hacia la dirección del joystick
+		if (dir != Vector2.zero)
+		{
+			float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+			transform.rotation = Quaternion.Euler(0, angle, 0);
+		}
+
+		// Dash hacia la dirección del movimiento cuando se presiona la tecla Tab
+		if (Input.GetKeyDown(KeyCode.Tab) && cuantityDashes > 0)
+		{
+			rb.AddForce(rb.velocity * 60, ForceMode.Impulse);
+			cuantityDashes--;
+		}
+		else
+		{
+			timerDash += Time.deltaTime;
+			if (timerDash >= timeToRechargeDash)
+			{
+				if (cuantityDashes < 2)
+				{
+					cuantityDashes++;
+				}
+				timerDash = 0;
+			}
+		}
+	}
+
+	void Shoot()
     {
-        //float x = Input.GetAxis("Horizontal");
-        //float y = Input.GetAxis("Vertical");
-        rb.velocity = new Vector3(dir.x * speed, 0, dir.y * speed);
 
-        //Normalizar la velocidad para que el jugador no se mueva m�s r�pido en diagonal
-        //if (rb.velocity.magnitude > 1)
-        //{
-        //    rb.velocity = rb.velocity.normalized;
-        //}
-
-        // Agregar el boton tab para que el jugador haga un dash hacia la direcci�n en la que se esta moviendo
-        if (Input.GetKeyDown(KeyCode.Tab) && cuantityDashes>0)
-        {
-            rb.AddForce(rb.velocity * 60, ForceMode.Impulse);
-            cuantityDashes--;
-        }
-        else
-        {
-            timerDash += Time.deltaTime;
-            if (timerDash >= timeToRechargeDash)
-            {
-                if (cuantityDashes < 2)
-                {
-                    cuantityDashes++; 
-                }
-                timerDash = 0;
-            }
-        }
-
+        Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+      
     }
-
-    void Shoot()
+    void Pruebitas()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(bulletPrefab, firePoint.position, transform.rotation);
-        }
-         
         if (Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(1f);
@@ -166,7 +166,6 @@ public class Player : MonoBehaviour
             IncreaseXp(2f);
             Debug.Log($"CurrentXp: {exp} --- {level}");
         }
-
     }
     
 
@@ -210,6 +209,9 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             SceneManager.LoadScene("PlayerScene");
+            //PlayerPrefs.SetInt("Level", level);
+            //PlayerPrefs.SetFloat("Exp", exp);
+
         }
     }
     public void IncreaseXp(float xpToIncrease)
