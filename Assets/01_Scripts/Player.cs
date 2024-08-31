@@ -72,6 +72,7 @@ public class Player : MonoBehaviour
         Movement();
         //Shoot();
         Aim();
+        Pruebitas();
 
 
         if (healthSlider.value != easeHealthSlider.value)
@@ -84,10 +85,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HealthCheck()
+    public void HealthCheck()
     {
-        // healthSlider.value es un valor entre 0 y 1
-        // cambiar el valor si los valores no coinciden
         if (health<=0)
         {
             healthSlider.value = 0;
@@ -105,7 +104,7 @@ public class Player : MonoBehaviour
         //}
 
     }
-    private void XpCheck()
+    public void XpCheck()
     {
         //if (lvlSlider.value != exp / maxExp)
         //{
@@ -152,24 +151,21 @@ public class Player : MonoBehaviour
 
 	void Shoot()
     {
-		//if (Input.GetKeyDown(KeyCode.Space))
-		//{
-		//    Instantiate(bulletPrefab, firePoint.position, transform.rotation);
-		//}
-     
-		Instantiate(bulletPrefab, firePoint.position, transform.rotation);
 
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    TakeDamage(1f);
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Y))
-        //{
-        //    IncreaseXp(2f);
-        //    Debug.Log($"CurrentXp: {exp} --- {level}");
-        //}
-
+        Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+      
+    }
+    void Pruebitas()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(1f);
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            IncreaseXp(2f);
+            Debug.Log($"CurrentXp: {exp} --- {level}");
+        }
     }
     
 
@@ -213,6 +209,9 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             SceneManager.LoadScene("PlayerScene");
+            //PlayerPrefs.SetInt("Level", level);
+            //PlayerPrefs.SetFloat("Exp", exp);
+
         }
     }
     public void IncreaseXp(float xpToIncrease)
