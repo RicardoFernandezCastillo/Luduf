@@ -44,6 +44,7 @@ public class DungeonGenerator : MonoBehaviour
 				if (currentCell.visited)
 				{
 					RoomBehaviour newRoom = null;
+
 					if (i == 0 && j == 0)
 					{
 						newRoom = Instantiate(startRoom, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();

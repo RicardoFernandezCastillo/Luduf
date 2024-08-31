@@ -47,7 +47,8 @@ public class Player : MonoBehaviour
         inputActions = new NewInputSystem();//--
         inputActions.Player.Movement.performed += ctx => dir = ctx.ReadValue<Vector2>();
         inputActions.Player.Movement.canceled += ctx => dir = Vector2.zero;
-		inputActions.Player.Shoot.performed += ctx => Shoot();
+		inputActions.Player.Shoot.performed += ctx => Shoot(); //Se ejecuta cada ves que dispare
+
 	}
 
 	private void OnEnable()
@@ -116,39 +117,39 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Movement()
-    {
-        // Mueve al jugador en la dirección del joystick
-        rb.velocity = new Vector3(dir.x * speed, 0, dir.y * speed);
+	void Movement()
+	{
+		// Mueve al jugador en la dirección del joystick
+		rb.velocity = new Vector3(dir.x * speed, 0, dir.y * speed);
 
-        // Si hay movimiento, rota al jugador hacia la dirección del joystick
-        if (dir != Vector2.zero)
-        {
-            float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, angle, 0);
-        }
+		// Si hay movimiento, rota al jugador hacia la dirección del joystick
+		if (dir != Vector2.zero)
+		{
+			float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+			transform.rotation = Quaternion.Euler(0, angle, 0);
+		}
 
-        // Dash hacia la dirección del movimiento cuando se presiona la tecla Tab
-        if (Input.GetKeyDown(KeyCode.Tab) && cuantityDashes > 0)
-        {
-            rb.AddForce(rb.velocity * 60, ForceMode.Impulse);
-            cuantityDashes--;
-        }
-        else
-        {
-            timerDash += Time.deltaTime;
-            if (timerDash >= timeToRechargeDash)
-            {
-                if (cuantityDashes < 2)
-                {
-                    cuantityDashes++;
-                }
-                timerDash = 0;
-            }
-        }
-    }
+		// Dash hacia la dirección del movimiento cuando se presiona la tecla Tab
+		if (Input.GetKeyDown(KeyCode.Tab) && cuantityDashes > 0)
+		{
+			rb.AddForce(rb.velocity * 60, ForceMode.Impulse);
+			cuantityDashes--;
+		}
+		else
+		{
+			timerDash += Time.deltaTime;
+			if (timerDash >= timeToRechargeDash)
+			{
+				if (cuantityDashes < 2)
+				{
+					cuantityDashes++;
+				}
+				timerDash = 0;
+			}
+		}
+	}
 
-    void Shoot()
+	void Shoot()
     {
 
         Instantiate(bulletPrefab, firePoint.position, transform.rotation);
