@@ -46,6 +46,7 @@ public class PlayerPref : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
+            float h_aux = player.health;
             player.health = PlayerPrefs.GetFloat("health", player.health);
             player.maxHealth = PlayerPrefs.GetFloat("maxHealth", player.maxHealth);
             player.level = PlayerPrefs.GetInt("level", player.level);
@@ -54,8 +55,18 @@ public class PlayerPref : MonoBehaviour
             player.cuantityDashes = PlayerPrefs.GetInt("cuantityDashes", player.cuantityDashes);
             player.timeToRechargeDash = PlayerPrefs.GetFloat("timeToRechargeDash", player.timeToRechargeDash);
             player.total_Ammo = PlayerPrefs.GetInt("totalAmmo", player.total_Ammo);
-            
-            player.HealthCheck();
+
+            if (h_aux > PlayerPrefs.GetFloat("health", player.health))
+            {
+                player.HealthCheck(false);
+                Debug.Log("Cargando Disminuir vida");
+            }
+            else
+            {
+                player.HealthCheck(true);
+                Debug.Log("Cargando Aumentar vida");
+            }
+
             player.XpCheck();
         }
     }

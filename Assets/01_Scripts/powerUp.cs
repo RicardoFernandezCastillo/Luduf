@@ -5,6 +5,8 @@ using UnityEngine;
 public class powerUp : MonoBehaviour
 {
 	public powerUps type = powerUps.powerLife;
+
+	public Player player;
 	// Start is called before the first frame update
 	public enum powerUps
 	{
@@ -29,7 +31,9 @@ public class powerUp : MonoBehaviour
 		switch (type)
 		{
 			case powerUps.powerLife:
-				break;
+				player.IncreaseHealth(1f);
+
+                break;
 			case powerUps.powerBullet:
 				break;
 			case powerUps.powerRun:
@@ -41,10 +45,12 @@ public class powerUp : MonoBehaviour
 	{
 		if (collision.gameObject.CompareTag("Player"))
 		{
-			Debug.Log("Player recojio el entro" + type);
-			typePower();
+			player = collision.gameObject.GetComponent<Player>();
+
 			Destroy(gameObject);
-		}
+
+            typePower();
+        }
 	}
 
 }
