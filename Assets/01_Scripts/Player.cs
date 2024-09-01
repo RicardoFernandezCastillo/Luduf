@@ -194,7 +194,6 @@ public class Player : MonoBehaviour
                 increaseHealth = true;
             }
         }
-
     }
 
     public void XpCheck()
