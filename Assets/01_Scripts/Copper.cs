@@ -32,8 +32,8 @@ public class Copper : MonoBehaviour
 			}
 			isInstanse=false;
 		}
-       
     }
+
 
 	private void OnTriggerEnter(Collider other)
 	{

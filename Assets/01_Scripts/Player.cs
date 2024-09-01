@@ -12,8 +12,8 @@ public class Player : MonoBehaviour
 
     [Header("Stats")]
     public float speed = 4f;
-    public float health = 5f;
-    public float maxHealth = 5f;
+    public float health = 10f;
+    public float maxHealth = 10f;
 
     public int level = 1;
     public float exp = 0f;
@@ -235,7 +235,7 @@ public class Player : MonoBehaviour
     
     public void TakeDamage(float damage)
     {
-
+        Debug.Log("tiene danio :" + health);
         health -= damage;
         HealthCheck();
         if (health <= 0)
@@ -295,15 +295,15 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag("powerLife"))
-		{
-			Debug.Log("Player entered se encontro un posion ");
-            //logica de posin de vida
-		}else if (other.CompareTag("powerBullet"))
-		{
-			Debug.Log("Player entered se encontro un powerbullet ");
-			//logica de posin de vida
-		}
+		//if (other.CompareTag("powerLife"))
+		//{
+		//	Debug.Log("Player entered se encontro un posion ");
+  //          //logica de posin de vida
+		//}else if (other.CompareTag("powerBullet"))
+		//{
+		//	Debug.Log("Player entered se encontro un powerbullet ");
+		//	//logica de posin de vida
+		//}
 	}
 
 }
