@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
+
 //using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomBehaviour : MonoBehaviour
 {
@@ -75,7 +78,10 @@ public class RoomBehaviour : MonoBehaviour
 				break;
 			case RoomType.BossRoom:
 				CloseDoors();
-				break;
+				PlayerPref.SaveStats();
+                SceneManager.LoadScene("PlayerScene");
+
+                break;
 		}
 	}
 

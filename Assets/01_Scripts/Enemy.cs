@@ -38,6 +38,15 @@ public class Enemy : MonoBehaviour
 
     private Player player;
 
+    [Header("Sounds")]
+    public AudioClip vampireAttackSound;
+    public AudioClip wolfAttackSound;
+    public AudioClip batAttackSound;
+
+    public AudioClip playerDeathSound;
+    public AudioClip GameOverSound;
+    public AudioClip levelUpSound;
+
 
 
 
@@ -145,6 +154,7 @@ public class Enemy : MonoBehaviour
             {
                 timer = 0f;
                 Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+                //AudioManager.instance.PlaySFX(batAttackSound);
             }
             else
             {
@@ -179,6 +189,7 @@ public class Enemy : MonoBehaviour
                     Debug.Log("El Lobo Atac�");
                     // Hacer daño al jugador
                     MakeDamageToPlayer();
+                    //AudioManager.instance.PlaySFX(wolfAttackSound);
 
                 }
                 else
@@ -227,6 +238,8 @@ public class Enemy : MonoBehaviour
                     Debug.Log("El Vampiro Atac�");
                     // Hacer daño al jugador
                     MakeDamageToPlayer();
+                    //AudioManager.instance.PlaySFX(vampireAttackSound);
+
                 }
                 else
                 {
