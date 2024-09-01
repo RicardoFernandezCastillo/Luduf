@@ -95,7 +95,6 @@ public class Player : MonoBehaviour
 
 	void Start()
     {
-        // si avanzo de nivel cargar los datos
         if (PlayerPrefs.GetInt("level") > level || PlayerPrefs.GetFloat("exp") > exp)
         {
             Debug.Log($"Level = {PlayerPrefs.GetInt("level")}  --- {level} Exp = {PlayerPrefs.GetFloat("exp")} ------- {exp}  ");
@@ -343,6 +342,8 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             
+            //Borrar player prefs
+            PlayerPrefs.DeleteAll();
             SceneManager.LoadScene("PlayerScene");
             //PlayerPrefs.SetInt("Level", level);
             //PlayerPrefs.SetFloat("Exp", exp);

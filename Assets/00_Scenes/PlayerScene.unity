@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.04285635, g: 0.040333685, b: 0.044378065, a: 1}
+  m_IndirectSpecularColor: {r: 0.042866625, g: 0.040343355, b: 0.044389315, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1981,7 +1981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 118, y: 75}
+  m_AnchoredPosition: {x: 118, y: 86.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1445487846
@@ -2239,8 +2239,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicAS: {fileID: 1678923238}
   sfxAS: {fileID: 1678923238}
-  sfxVol: 1
-  musicVol: 0.7
+  sfxVol: 0.61
+  musicVol: 0.14
 --- !u!4 &1678923240
 Transform:
   m_ObjectHideFlags: 0
@@ -3177,3 +3177,4 @@ SceneRoots:
   - {fileID: 1944057804}
   - {fileID: 1927416475}
   - {fileID: 5740751613912869971}
+  - {fileID: 1678923240}
