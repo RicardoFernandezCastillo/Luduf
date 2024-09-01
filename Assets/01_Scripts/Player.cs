@@ -12,8 +12,8 @@ public class Player : MonoBehaviour
 
     [Header("Stats")]
     public float speed = 4f;
-    public float health = 5f;
-    public float maxHealth = 5f;
+    public float health = 10f;
+    public float maxHealth = 10f;
 
     public int level = 1;
     public float exp = 0f;
@@ -29,6 +29,8 @@ public class Player : MonoBehaviour
     public Slider lvlSlider;
     public Slider easeLvlSlider;
 
+    public Slider reloadSlider;
+
     public TextMeshProUGUI lvlText;
 
     private float lerpSpeed = 0.03f;
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour
     public int cuantityDashes = 2;
     public float timeToRechargeDash = 5f;
     private float timerDash = 0f;
+    private bool isRechargingDash = false;
 
 
     public int total_Ammo = 70;
@@ -44,6 +47,9 @@ public class Player : MonoBehaviour
     public int currentAmmo = 15;
     public float timeToReload = 3f;
     private float timerReload = 0f;
+    private bool isReloading = false;
+    
+    private bool increaseHealth = false;
 
 
 
@@ -58,10 +64,15 @@ public class Player : MonoBehaviour
         inputActions.Player.Movement.performed += ctx => dir = ctx.ReadValue<Vector2>();
         inputActions.Player.Movement.canceled += ctx => dir = Vector2.zero;
 		inputActions.Player.Shoot.performed += ctx => Shoot(); //Se ejecuta cada ves que dispare
+        inputActions.Player.Reload.performed += ctx => CheckReload(); //Se ejecuta cada ves que dispare
+        inputActions.Player.Dash.performed += ctx => DashMovement(); //Se ejecuta cada ves que dispare
+
 
 	}
 
-	private void OnEnable()
+
+
+    private void OnEnable()
 	{
 		inputActions.Enable();
 	}
@@ -79,49 +90,92 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentAmmo <= 0)
+        if (currentAmmo <= 0 || isReloading)
         {
+            reloadSlider.value = 0f;
             timerReload += Time.deltaTime;
+
+            float reloadProgress = Mathf.Clamp01(timerReload / timeToReload);
+            reloadSlider.value = reloadProgress;
+            //reloadSlider.value = Mathf.Lerp(reloadSlider.value, reloadProgress, Time.deltaTime * 3f);
 
             if (timerReload >= timeToReload)
             {
+                reloadSlider.value = 1f;
                 Reload();
+
             }
         }
 
         Movement();
         Aim();
         Pruebitas();
+        RechargeDash();
 
+        UpdateSliders(increaseHealth);
+    }
 
+    void UpdateSliders(bool p)
+    {
         if (healthSlider.value != easeHealthSlider.value)
         {
-            easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, healthSlider.value, lerpSpeed);
+            if (!p)
+            {
+                //healthSlider.value = Mathf.Lerp(healthSlider.value, easeHealthSlider.value, lerpSpeed);
+                easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, healthSlider.value, lerpSpeed);
+            }
+            else
+            {
+                //easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, healthSlider.value, lerpSpeed); k
+                healthSlider.value = Mathf.Lerp(healthSlider.value, easeHealthSlider.value, lerpSpeed);
+
+            }
         }
         if (lvlSlider.value != easeLvlSlider.value)
         {
-            lvlSlider.value = Mathf.Lerp(lvlSlider.value,  easeLvlSlider.value, lerpSpeed);
+            lvlSlider.value = Mathf.Lerp(lvlSlider.value, easeLvlSlider.value, lerpSpeed);
         }
+
     }
 
-    public void HealthCheck()
+
+    private void CheckReload()
     {
+        if (currentAmmo != magazineSize)
+        {
+            isReloading = true;
+        }
+    }
+    public void IncreaseHealth(float healthToIncrease)
+    {
+        health += healthToIncrease;
+        HealthCheck(true);
+    }
+    public void HealthCheck(bool posi)
+    {
+        // posicion true es para aumentar la vida
         if (health<=0)
         {
             healthSlider.value = 0;
         }
-        else if (healthSlider.value != health / maxHealth)
+        else
         {
-            healthSlider.value = health / maxHealth;
+            if(!posi)
+            {
+                healthSlider.value = health / maxHealth;
+                increaseHealth = false;
+            }
+            else
+            {
+                easeHealthSlider.value = health / maxHealth;
+                increaseHealth = true;
+            }
         }
+
     }
+
     public void XpCheck()
     {
-        //if (lvlSlider.value != exp / maxExp)
-        //{
-        //    lvlSlider.value = exp / maxExp;
-        //}
-
         if (easeLvlSlider.value != exp / maxExp)
         {
             easeLvlSlider.value = exp / maxExp;
@@ -139,26 +193,40 @@ public class Player : MonoBehaviour
 			float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
 			transform.rotation = Quaternion.Euler(0, angle, 0);
 		}
-
-		// Dash hacia la dirección del movimiento cuando se presiona la tecla Tab
-		if (Input.GetKeyDown(KeyCode.Tab) && cuantityDashes > 0)
-		{
-			rb.AddForce(rb.velocity * 60, ForceMode.Impulse);
-			cuantityDashes--;
-		}
-		else
-		{
-			timerDash += Time.deltaTime;
-			if (timerDash >= timeToRechargeDash)
-			{
-				if (cuantityDashes < 2)
-				{
-					cuantityDashes++;
-				}
-				timerDash = 0;
-			}
-		}
 	}
+
+    void DashMovement()
+    {
+        // Dash hacia la dirección del movimiento cuando se presiona la tecla Tab
+        if (cuantityDashes > 0)
+        {
+            rb.AddForce(rb.velocity * 40, ForceMode.Impulse);
+            cuantityDashes--;
+            isRechargingDash = true;
+        }
+    }
+
+    void RechargeDash()
+    {
+        if (isRechargingDash)
+        {
+            timerDash += Time.deltaTime;
+            if (timerDash >= timeToRechargeDash)
+            {
+                if (cuantityDashes < 2)
+                {
+                    cuantityDashes++;
+                }
+                else
+                {
+                    isRechargingDash = false;
+                }
+                timerDash = 0;
+            }
+        }
+    }
+
+
     void Shoot()
     {
         if (currentAmmo > 0)
@@ -175,8 +243,9 @@ public class Player : MonoBehaviour
     {
         if (total_Ammo >= magazineSize)
         {
+            int aux = magazineSize - currentAmmo;
             currentAmmo = magazineSize;
-            total_Ammo -= magazineSize;
+            total_Ammo -= aux;
         }
         else
         {
@@ -184,6 +253,7 @@ public class Player : MonoBehaviour
             total_Ammo = 0;
         }
         timerReload = 0;
+        isReloading = false;
     }
 
 
@@ -196,9 +266,18 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            IncreaseXp(2f);
+            IncreaseXp(9f);
             Debug.Log($"CurrentXp: {exp} --- {level}");
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (currentAmmo != magazineSize)
+            {
+                isReloading = true;
+            }
+
+        }
+
     }
     
 
@@ -235,9 +314,9 @@ public class Player : MonoBehaviour
     
     public void TakeDamage(float damage)
     {
-
+        Debug.Log("tiene danio :" + health);
         health -= damage;
-        HealthCheck();
+        HealthCheck(false);
         if (health <= 0)
         {
             SceneManager.LoadScene("PlayerScene");
@@ -293,17 +372,6 @@ public class Player : MonoBehaviour
         //HealthCheck();
     }
 
-	private void OnTriggerEnter(Collider other)
-	{
-		if (other.CompareTag("powerLife"))
-		{
-			Debug.Log("Player entered se encontro un posion ");
-            //logica de posin de vida
-		}else if (other.CompareTag("powerBullet"))
-		{
-			Debug.Log("Player entered se encontro un powerbullet ");
-			//logica de posin de vida
-		}
-	}
+
 
 }

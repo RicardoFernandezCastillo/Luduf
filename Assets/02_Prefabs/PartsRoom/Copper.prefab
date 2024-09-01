@@ -85,6 +85,8 @@ MonoBehaviour:
   PowerPrefas:
   - {fileID: 4852253068264195727, guid: ff95b3c35349bd44483050460f7438e4, type: 3}
   - {fileID: 9197490052449973369, guid: 8b4c2188845f2c5448121677710394cd, type: 3}
+  - {fileID: 7117378259770646481, guid: d3a30a76bd1b8c34b8538cc03beaa66a, type: 3}
+  - {fileID: 1438959291369197843, guid: d6647ae5d84bd064ea5168b6c3efb3c9, type: 3}
   transCopper: {fileID: 2483442427304298334}
 --- !u!33 &9119034173259824303
 MeshFilter:

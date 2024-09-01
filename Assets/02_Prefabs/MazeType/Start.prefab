@@ -9111,6 +9111,8 @@ MonoBehaviour:
   type: 0
   positions: []
   prefabsEnemys: []
+  prefCopper: {fileID: 0}
+  copperPosition: []
   enemiesRemaining: 0
   auxWall: 00000000
   visited: 0

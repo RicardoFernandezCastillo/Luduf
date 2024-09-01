@@ -24,7 +24,8 @@ public class Copper : MonoBehaviour
     {
         if (isInstanse)
         {
-			int n = Random.Range(0, 2);
+			int n = Random.Range(0, 10);
+            n = 1;
 			if (n == 1)
 			{
 				int p = Random.Range(0, PowerPrefas.Count);
@@ -32,19 +33,23 @@ public class Copper : MonoBehaviour
 			}
 			isInstanse=false;
 		}
-       
     }
+
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Bullet"))
 		{
-			Debug.Log("Entro para el cofre ");
-			//Invoke("InstancePower", 0.3f);
-			Destroy(gameObject);
+
+            //Invoke("InstancePower", 0.3f);
+
+            Destroy(gameObject);
+            Debug.Log("Entro para el cofre ");
+            InstancePower();
+
 			Destroy(other.gameObject);
 
-			InstancePower();
+
 
 
 		}
