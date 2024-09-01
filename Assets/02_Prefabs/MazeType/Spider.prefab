@@ -9294,7 +9294,7 @@ MonoBehaviour:
   - {fileID: 6718559026526993117}
   - {fileID: 5464425351539500562}
   prefabsEnemys:
-  - {fileID: 3569463194161348237, guid: c76d791e338e00b4d802fca3acd0ed84, type: 3}
+  - {fileID: 5398204106609266246, guid: bdd4514a4073a02409e6f976f42df858, type: 3}
   enemiesRemaining: 0
   auxWall: 00000000
   visited: 0

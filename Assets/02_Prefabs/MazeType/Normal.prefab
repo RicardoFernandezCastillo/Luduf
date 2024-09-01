@@ -9106,14 +9106,14 @@ MonoBehaviour:
   - {fileID: 4629218605618107096}
   - {fileID: 6719028167388560133}
   - {fileID: 2728594495659385985}
-  type: 2
+  type: 1
   positions:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   prefabsEnemys:
-  - {fileID: 3569463194161348237, guid: c76d791e338e00b4d802fca3acd0ed84, type: 3}
+  - {fileID: 3467478523891761756, guid: 6f1ecad304ccf6c47b9e8bc1282d4531, type: 3}
   enemiesRemaining: 0
   auxWall: 00000000
   visited: 0
