@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float speed = 6;
+    public float speed = 6f;
     public float timeToDestroy = 4;
     public float damage = 1f;
     public bool playerBullet = false;
@@ -24,7 +24,13 @@ public class Bullet : MonoBehaviour
         if (playerBullet && collision.gameObject.CompareTag("Enemy"))
         {
             Enemy e = collision.gameObject.GetComponent<Enemy>();
-            e.TakeDamage(damage);
+            e.TakeDamage(damage, true);
+            Destroy(gameObject);
+        }
+        else if (collision.gameObject.CompareTag("Enemy")) // && !playerBullet si un enemigo dispara a otro enemigo
+        {
+            Enemy e = collision.gameObject.GetComponent<Enemy>();
+            e.TakeDamage(damage, false);
             Destroy(gameObject);
         }
         else if (!playerBullet && collision.gameObject.CompareTag("Player"))
@@ -33,10 +39,11 @@ public class Bullet : MonoBehaviour
             p.TakeDamage(damage);
             Destroy(gameObject);
         }
-        //else if (collision.gameObject.CompareTag("Bullet"))
-        //{
-        //    Destroy(gameObject);
-        //}
+        else if (collision.gameObject.CompareTag("Bullet"))
+        {
+            Destroy(gameObject);
+        }
+
         //else if (collision.gameObject.CompareTag("Boss"))
         //{
         //    Boss b = collision.gameObject.GetComponent<Boss>();

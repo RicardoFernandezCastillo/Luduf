@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -28,12 +29,21 @@ public class Player : MonoBehaviour
     public Slider lvlSlider;
     public Slider easeLvlSlider;
 
+    public TextMeshProUGUI lvlText;
+
     private float lerpSpeed = 0.03f;
 
 
     public int cuantityDashes = 2;
     public float timeToRechargeDash = 5f;
     private float timerDash = 0f;
+
+
+    public int total_Ammo = 70;
+    public int magazineSize = 15;
+    public int currentAmmo = 15;
+    public float timeToReload = 3f;
+    private float timerReload = 0f;
 
 
 
@@ -69,8 +79,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (currentAmmo <= 0)
+        {
+            timerReload += Time.deltaTime;
+
+            if (timerReload >= timeToReload)
+            {
+                Reload();
+            }
+        }
+
         Movement();
-        //Shoot();
         Aim();
         Pruebitas();
 
@@ -95,14 +114,6 @@ public class Player : MonoBehaviour
         {
             healthSlider.value = health / maxHealth;
         }
-
-        //if (healthSlider.value != easeHealthSlider.value)
-        //{
-        //    // Animar el slider de vida
-        //    // Mathf.Lerp(valorInicial, valorFinal, velocidad)
-        //    easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, healthSlider.value, lerpSpeed * Time.deltaTime);
-        //}
-
     }
     public void XpCheck()
     {
@@ -148,13 +159,35 @@ public class Player : MonoBehaviour
 			}
 		}
 	}
-
-	void Shoot()
+    void Shoot()
     {
+        if (currentAmmo > 0)
+        {
+            Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+            currentAmmo--;
 
-        Instantiate(bulletPrefab, firePoint.position, transform.rotation);
-      
+            //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            //bullet.GetComponent<Bullet>().playerBullet = true;
+        }
     }
+
+    void Reload()
+    {
+        if (total_Ammo >= magazineSize)
+        {
+            currentAmmo = magazineSize;
+            total_Ammo -= magazineSize;
+        }
+        else
+        {
+            currentAmmo = total_Ammo;
+            total_Ammo = 0;
+        }
+        timerReload = 0;
+    }
+
+
+
     void Pruebitas()
     {
         if (Input.GetKeyDown(KeyCode.T))
@@ -200,7 +233,6 @@ public class Player : MonoBehaviour
 
     }
     
-
     public void TakeDamage(float damage)
     {
 
@@ -221,9 +253,57 @@ public class Player : MonoBehaviour
         if (exp > maxExp)
         {
             level++;
+            lvlText.text = level.ToString();
+            //hacer el text bold
+            lvlText.fontStyle = FontStyles.Bold;
             exp = exp - maxExp;
+            IncreaseStats();
         }
         XpCheck();
     }
+    void IncreaseStats()
+    {        
+        //incrementar la velocidad del jugador un 1.5%
+        speed += 0.015f;
+
+        //incrementar el daño de las balas un 5%
+        bulletPrefab.GetComponent<Bullet>().damage += 0.05f; // bulletPrefab es el prefab de la bala
+
+        //incrementar la velocidad de las balas un 2%
+        bulletPrefab.GetComponent<Bullet>().speed += 0.02f;
+        //incrementar la velocidad de recarga de las balas un 2%
+        timeToReload -= 0.02f;
+
+        // cada 5 niveles Incrementar
+        if (level % 5 == 0)
+        {
+            // la cantidad de balas que se pueden cargar en el cargador
+            magazineSize += 5;
+            
+            // aumentar la vida máxima un 5%
+            maxHealth += 0.05f;
+        }
+
+        //maxHealth += 5;
+        //health = maxHealth;
+        //maxExp += 10;
+        //exp = 0;
+        //level++;
+        //XpCheck();
+        //HealthCheck();
+    }
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("powerLife"))
+		{
+			Debug.Log("Player entered se encontro un posion ");
+            //logica de posin de vida
+		}else if (other.CompareTag("powerBullet"))
+		{
+			Debug.Log("Player entered se encontro un powerbullet ");
+			//logica de posin de vida
+		}
+	}
 
 }
