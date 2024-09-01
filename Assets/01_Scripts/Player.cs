@@ -146,6 +146,11 @@ public class Player : MonoBehaviour
             isReloading = true;
         }
     }
+    public void IncreaseHealth(float healthToIncrease)
+    {
+        health += healthToIncrease;
+        HealthCheck(true);
+    }
     public void HealthCheck(bool posi)
     {
         // posicion true es para aumentar la vida
@@ -309,7 +314,7 @@ public class Player : MonoBehaviour
     
     public void TakeDamage(float damage)
     {
-
+        Debug.Log("tiene danio :" + health);
         health -= damage;
         HealthCheck(false);
         if (health <= 0)
@@ -367,25 +372,6 @@ public class Player : MonoBehaviour
         //HealthCheck();
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("powerLife"))
-        {
-            Debug.Log("Player entered se encontro un posion ");
-            //Destroy(other.gameObject);
-            health += 1;
-            HealthCheck(true);
-            Destroy(collision.gameObject);
-            //logica de posin de vida
-        }
-        else if (collision.gameObject.CompareTag("powerBullet"))
-        {
-            bulletPrefab.GetComponent<Bullet>().damage += 0.05f;
-            Debug.Log("Player entered se encontro un powerbullet ");
-            Destroy(collision.gameObject);
 
-            //logica de posin de vida
-        }
-    }
 
 }

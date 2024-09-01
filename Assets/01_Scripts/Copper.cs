@@ -33,17 +33,20 @@ public class Copper : MonoBehaviour
 			}
 			isInstanse=false;
 		}
-       
     }
+
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Bullet"))
 		{
-			Debug.Log("Entro para el cofre ");
+
             //Invoke("InstancePower", 0.3f);
-            InstancePower();
+
             Destroy(gameObject);
+            Debug.Log("Entro para el cofre ");
+            InstancePower();
+
 			Destroy(other.gameObject);
 
 

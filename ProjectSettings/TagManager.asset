@@ -13,6 +13,7 @@ TagManager:
   - Copper
   - powerLife
   - powerBullet
+  - powerRun
   layers:
   - Default
   - TransparentFX
