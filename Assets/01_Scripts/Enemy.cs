@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
     public Transform firePoint3;
     public Transform firePoint4;
 
+    private float xpGiven = 5f;
+
     [Header("Referencias")]
     public GameObject bulletPrefab;
     public Rigidbody rb;
@@ -34,6 +36,7 @@ public class Enemy : MonoBehaviour
     private bool canAttack = false;
     private Transform target;
 
+    private Player player;
 
 
 
@@ -43,6 +46,7 @@ public class Enemy : MonoBehaviour
 
         EnemiesStats();
         PlayerLocation();
+        AssignStats();
     }
 
     private void EnemiesStats()
@@ -50,19 +54,47 @@ public class Enemy : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.Vampire:
-                speed = Random.Range(2f, 4f);
-                //canAttack = Random.Range(0, 2) == 0;
+                //speed = Random.Range(2f, 4f);
                 Destroy(gameObject, timeToDestroy);
                 break;
             case EnemyType.Wolf:
-                speed = Random.Range(4f, 6f);
-                //canAttack = Random.Range(0, 2) == 0;
+                //speed = Random.Range(4f, 6f);
                 Destroy(gameObject, timeToDestroy);
                 break;
             case EnemyType.Bat:
-                speed = Random.Range(2f, 4f);
-                //canAttack = Random.Range(0, 2) == 0;
+                //speed = Random.Range(2f, 4f);
                 Destroy(gameObject, timeToDestroy);
+                break;
+        }
+    }
+
+    void AssignStats()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Vampire:
+                //life = 2f;
+                //maxLife = 2f;
+                //timeToDestroy = 10f;
+                //damage = 1f;
+                //timeBtwAttack = 1f;
+                xpGiven = 4f;
+                break;
+            case EnemyType.Wolf:
+                //life = 3f;
+                //maxLife = 3f;
+                //timeToDestroy = 10f;
+                //damage = 1f;
+                //timeBtwAttack = 1f;
+                xpGiven = 3f;
+                break;
+            case EnemyType.Bat:
+                //life = 1f;
+                //maxLife = 1f;
+                //timeToDestroy = 10f;
+                //damage = 1f;
+                //timeBtwAttack = 1f;
+                xpGiven = 2f;
                 break;
         }
     }
@@ -70,6 +102,7 @@ public class Enemy : MonoBehaviour
     private void PlayerLocation()
     {
         GameObject targetGo = GameObject.FindGameObjectWithTag("Player");
+        player = targetGo.GetComponent<Player>();
         if (targetGo != null)
         {
             target = targetGo.transform;
@@ -95,17 +128,18 @@ public class Enemy : MonoBehaviour
 
     private void BatBehaviour()
     {
-        if (Vector3.Distance(transform.position, target.position) < 15f && Vector3.Distance(transform.position, target.position) > 10f)
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
         {
-            Vector3 dir = target.position - transform.position;
-            float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, angle, 0);
 
-
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
-        else if (Vector3.Distance(transform.position, target.position) < 10f)
+        if (Vector3.Distance(transform.position, target.position) < 10f)
         {
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            //transform.rotation = Quaternion.Euler(0, 180, 0);
 
             if (timer >= timeBtwAttack)
             {
@@ -143,6 +177,9 @@ public class Enemy : MonoBehaviour
                 {
                     timer = 0f;
                     Debug.Log("El Lobo Atac�");
+                    // Hacer daño al jugador
+                    MakeDamageToPlayer();
+
                 }
                 else
                 {
@@ -188,6 +225,8 @@ public class Enemy : MonoBehaviour
                 {
                     timer = 0f;
                     Debug.Log("El Vampiro Atac�");
+                    // Hacer daño al jugador
+                    MakeDamageToPlayer();
                 }
                 else
                 {
@@ -195,6 +234,10 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
+    }
+    void MakeDamageToPlayer()
+    {
+        player.TakeDamage(damage);
     }
 
     void Kamikaze()
@@ -208,7 +251,6 @@ public class Enemy : MonoBehaviour
             Movement();
         }
     }
-
     private void Action()
     {
         Vector3 dir = target.position - transform.position;
@@ -227,7 +269,6 @@ public class Enemy : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 180, 0);
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
-
     void Shoot()
     {
         if (canAttack && timer >= timeBtwAttack)
@@ -242,12 +283,18 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool p)
     {
         life -= damage;
         HealthCheck();
+
         if (life <= 0)
         {
+            if (p)
+            {
+
+                player.IncreaseXp(xpGiven);
+            }
             Destroy(gameObject);
         }
     }
@@ -262,6 +309,7 @@ public class Enemy : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+
         if (collision.gameObject.CompareTag("Player"))
         {
             Player player = collision.gameObject.GetComponent<Player>();

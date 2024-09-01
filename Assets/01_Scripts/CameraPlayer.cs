@@ -6,7 +6,8 @@ using UnityEngine;
 public class CameraPlayer : MonoBehaviour
 {
 	public Transform player;  // Referencia al Transform del jugador
-	public Vector3 offset = new Vector3(0, 15.9f, -11.83f);  // Offset para posicionar la cámara
+	public Vector3 offset = new Vector3(0, 0f, 5.83f);  // Offset para posicionar la cámara
+
 	public float smoothSpeed = 0.125f;  // Velocidad de suavizado para el movimiento de la cámara
 
 	void LateUpdate()

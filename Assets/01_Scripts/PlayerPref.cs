@@ -38,6 +38,8 @@ public class PlayerPref : MonoBehaviour
             PlayerPrefs.SetFloat("maxExp", player.maxExp);
             PlayerPrefs.SetInt("cuantityDashes", player.cuantityDashes);
             PlayerPrefs.SetFloat("timeToRechargeDash", player.timeToRechargeDash);
+            PlayerPrefs.SetInt("totalAmmo", player.total_Ammo);
+            
         }
     }
     void Load()
@@ -51,6 +53,7 @@ public class PlayerPref : MonoBehaviour
             player.maxExp = PlayerPrefs.GetFloat("maxExp", player.maxExp);
             player.cuantityDashes = PlayerPrefs.GetInt("cuantityDashes", player.cuantityDashes);
             player.timeToRechargeDash = PlayerPrefs.GetFloat("timeToRechargeDash", player.timeToRechargeDash);
+            player.total_Ammo = PlayerPrefs.GetInt("totalAmmo", player.total_Ammo);
             
             player.HealthCheck();
             player.XpCheck();
