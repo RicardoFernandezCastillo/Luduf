@@ -33,17 +33,18 @@ public class Bullet : MonoBehaviour
             p.TakeDamage(damage);
             Destroy(gameObject);
         }
-        //else if (collision.gameObject.CompareTag("Bullet"))
-        //{
-        //    Destroy(gameObject);
-        //}
-        //else if (collision.gameObject.CompareTag("Boss"))
-        //{
-        //    Boss b = collision.gameObject.GetComponent<Boss>();
-        //    b.TakeDamage(damage);
-        //    Destroy(gameObject);
-        //}
-    }
+
+		//else if (collision.gameObject.CompareTag("Bullet"))
+		//{
+		//    Destroy(gameObject);
+		//}
+		//else if (collision.gameObject.CompareTag("Boss"))
+		//{
+		//    Boss b = collision.gameObject.GetComponent<Boss>();
+		//    b.TakeDamage(damage);
+		//    Destroy(gameObject);
+		//}
+	}
     private void OnCollisionEnter(Collision collision)
     {
         //if (collision.gameObject.CompareTag("Bullet"))

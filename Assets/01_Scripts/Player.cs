@@ -226,4 +226,17 @@ public class Player : MonoBehaviour
         XpCheck();
     }
 
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("powerLife"))
+		{
+			Debug.Log("Player entered se encontro un posion ");
+            //logica de posin de vida
+		}else if (other.CompareTag("powerBullet"))
+		{
+			Debug.Log("Player entered se encontro un powerbullet ");
+			//logica de posin de vida
+		}
+	}
+
 }
