@@ -18,22 +18,6 @@ public class Player : MonoBehaviour
     public int level = 1;
     public float exp = 0f;
     public float maxExp = 10f;
-    [Header("Referencias")]
-    public Rigidbody rb;
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-
-    public Slider healthSlider;
-    public Slider easeHealthSlider;
-
-    public Slider lvlSlider;
-    public Slider easeLvlSlider;
-
-    public Slider reloadSlider;
-
-    public TextMeshProUGUI lvlText;
-
-    private float lerpSpeed = 0.03f;
 
 
     public int cuantityDashes = 2;
@@ -48,8 +32,35 @@ public class Player : MonoBehaviour
     public float timeToReload = 3f;
     private float timerReload = 0f;
     private bool isReloading = false;
-    
+
     private bool increaseHealth = false;
+
+    private float lerpSpeed = 0.03f;
+    [Header("Referencias")]
+    public Rigidbody rb;
+    public GameObject bulletPrefab;
+    public Transform firePoint;
+
+    [Header("UI")]
+    public Slider healthSlider;
+    public Slider easeHealthSlider;
+    public Slider lvlSlider;
+    public Slider easeLvlSlider;
+    public Slider reloadSlider;
+    public TextMeshProUGUI lvlText;
+
+
+
+    [Header("Sounds")]
+    public AudioClip rifleShootSound;
+    public AudioClip rifleReloadSound;
+    public AudioClip powerUpSound;
+    public AudioClip playerDeathSound;
+    public AudioClip GameOverSound;
+    public AudioClip levelUpSound;
+    //public AudioClip gam;
+
+
 
 
 
@@ -84,14 +95,24 @@ public class Player : MonoBehaviour
 
 	void Start()
     {
-        
+        if (PlayerPrefs.GetInt("level") > level || PlayerPrefs.GetFloat("exp") > exp)
+        {
+            Debug.Log($"Level = {PlayerPrefs.GetInt("level")}  --- {level} Exp = {PlayerPrefs.GetFloat("exp")} ------- {exp}  ");
+            PlayerPref.LoadStats();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentAmmo <= 0 || isReloading)
+        if (currentAmmo <= 0 && !isReloading)
         {
+            // Solo inicia la recarga si no estás recargando
+            CheckReload(); // Esto reproducirá el sonido
+        }
+        if (isReloading)
+        {
+
             reloadSlider.value = 0f;
             timerReload += Time.deltaTime;
 
@@ -103,7 +124,6 @@ public class Player : MonoBehaviour
             {
                 reloadSlider.value = 1f;
                 Reload();
-
             }
         }
 
@@ -141,9 +161,11 @@ public class Player : MonoBehaviour
 
     private void CheckReload()
     {
-        if (currentAmmo != magazineSize)
+        if (currentAmmo != magazineSize && !isReloading)
         {
             isReloading = true;
+            AudioManager.instance.PlaySFX(rifleReloadSound);
+            //AudioManager.instance.PlaySFXDelay(rifleReloadSound, timeToReload);
         }
     }
     public void IncreaseHealth(float healthToIncrease)
@@ -171,7 +193,6 @@ public class Player : MonoBehaviour
                 increaseHealth = true;
             }
         }
-
     }
 
     public void XpCheck()
@@ -231,6 +252,7 @@ public class Player : MonoBehaviour
     {
         if (currentAmmo > 0)
         {
+            AudioManager.instance.PlaySFX(rifleShootSound);
             Instantiate(bulletPrefab, firePoint.position, transform.rotation);
             currentAmmo--;
 
@@ -319,6 +341,9 @@ public class Player : MonoBehaviour
         HealthCheck(false);
         if (health <= 0)
         {
+            
+            //Borrar player prefs
+            PlayerPrefs.DeleteAll();
             SceneManager.LoadScene("PlayerScene");
             //PlayerPrefs.SetInt("Level", level);
             //PlayerPrefs.SetFloat("Exp", exp);

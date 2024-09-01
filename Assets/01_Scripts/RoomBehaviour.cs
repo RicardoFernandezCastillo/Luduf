@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
+
 //using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomBehaviour : MonoBehaviour
 {
@@ -15,6 +18,9 @@ public class RoomBehaviour : MonoBehaviour
 	
 	public List<GameObject> prefabsEnemys;
 
+	//para la Iluminasion
+	public List<GameObject> FirePoint;
+	public float activationDelay = 0.5f;  // Tiempo entre la activación de cada punto.
 
 	public GameObject prefCopper;
 	public List<Transform> copperPosition; //la  posicion de donde se va a instanciar eel cofre
@@ -75,7 +81,10 @@ public class RoomBehaviour : MonoBehaviour
 				break;
 			case RoomType.BossRoom:
 				CloseDoors();
-				break;
+				PlayerPref.SaveStats();
+                SceneManager.LoadScene("PlayerScene");
+
+                break;
 		}
 	}
 
@@ -119,6 +128,21 @@ public class RoomBehaviour : MonoBehaviour
 			}
 		}
 	}
+	
+
+	IEnumerator ActivateFirePointsConsecutively()
+	{
+		for (int i = 0; i < FirePoint.Count; i++)
+		{
+			FirePoint[i].SetActive(true);  // Activa el FirePoint actual.
+			yield return new WaitForSeconds(activationDelay);  // Espera el tiempo especificado antes de activar el siguiente.
+		}
+	}
+
+
+
+
+
 	void OpenDoors()
 	{
 		if (!roomCleared)
@@ -153,6 +177,7 @@ public class RoomBehaviour : MonoBehaviour
 		if (other.CompareTag("Player"))
 		{
 			Debug.Log("Player entered room: "+ type);
+			StartCoroutine(ActivateFirePointsConsecutively());
 			Invoke("TypoRoomInstance", 1f);
 		}
 	}
@@ -175,5 +200,4 @@ public class RoomBehaviour : MonoBehaviour
 			}
 		}
 	}
-
 }

@@ -32,7 +32,6 @@ public class powerUp : MonoBehaviour
 		{
 			case powerUps.powerLife:
 				player.IncreaseHealth(1f);
-
                 break;
 			case powerUps.powerBullet:
 				break;
@@ -45,10 +44,9 @@ public class powerUp : MonoBehaviour
 	{
 		if (collision.gameObject.CompareTag("Player"))
 		{
+			Debug.Log("Entro a la Colicion");
 			player = collision.gameObject.GetComponent<Player>();
-
 			Destroy(gameObject);
-
             typePower();
         }
 	}
