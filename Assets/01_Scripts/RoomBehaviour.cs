@@ -12,7 +12,12 @@ public class RoomBehaviour : MonoBehaviour
 	public RoomType type = RoomType.StartRoom;
 	
 	public List<Transform> positions;
+	
 	public List<GameObject> prefabsEnemys;
+
+
+	public GameObject prefCopper;
+	public List<Transform> copperPosition; //la  posicion de donde se va a instanciar eel cofre
 
 	public enum RoomType
 	{
@@ -36,8 +41,6 @@ public class RoomBehaviour : MonoBehaviour
 	{
 		instance = this;
 	}
-
-
 	void Start()
 	{
 		visited = true;//para poder Iniialisar Cuando es la primera ves que visita el cuarto
@@ -63,6 +66,9 @@ public class RoomBehaviour : MonoBehaviour
 	{
 		switch (type)
 		{
+			case RoomType.NormalRoom:
+				copperInstanse();
+				break;
 			case RoomType.SpiderRoom:
 				CloseDoors();//Serramos las Puertas
 				InstanceEnemySpider();//Intanciamos los nemigos
@@ -71,6 +77,19 @@ public class RoomBehaviour : MonoBehaviour
 				CloseDoors();
 				break;
 		}
+	}
+
+
+	//public List<Transform> copperPosition; //la  posicion de donde se va a instanciar eel cofre
+	//para NormalRoom
+	void copperInstanse()
+	{
+		if (visited)
+		{
+			int p = Random.Range(0, copperPosition.Count);
+			Instantiate(prefCopper, copperPosition[p].position, copperPosition[p].rotation);
+			visited = false;
+		}		
 	}
 
 
@@ -100,8 +119,6 @@ public class RoomBehaviour : MonoBehaviour
 			}
 		}
 	}
-
-
 	void OpenDoors()
 	{
 		if (!roomCleared)
