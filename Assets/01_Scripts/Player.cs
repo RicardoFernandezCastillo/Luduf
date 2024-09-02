@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
 
     private bool increaseHealth = false;
 
+    public int mapLevel = 1;
+
     private float lerpSpeed = 0.03f;
     [Header("Referencias")]
     public Rigidbody rb;
@@ -49,6 +51,10 @@ public class Player : MonoBehaviour
     public Slider reloadSlider;
     public TextMeshProUGUI lvlText;
 
+    public TextMeshProUGUI currentAmmoText;
+    public TextMeshProUGUI totalAmmoText;
+
+
 
 
     [Header("Sounds")]
@@ -58,6 +64,8 @@ public class Player : MonoBehaviour
     public AudioClip playerDeathSound;
     public AudioClip GameOverSound;
     public AudioClip levelUpSound;
+
+    public List<AudioClip> musicBackground;
     //public AudioClip gam;
 
 
@@ -66,6 +74,7 @@ public class Player : MonoBehaviour
 
     NewInputSystem inputActions;//--
     Vector2 dir = Vector2.zero;
+
 
 
     private void Awake()
@@ -77,8 +86,6 @@ public class Player : MonoBehaviour
 		inputActions.Player.Shoot.performed += ctx => Shoot(); //Se ejecuta cada ves que dispare
         inputActions.Player.Reload.performed += ctx => CheckReload(); //Se ejecuta cada ves que dispare
         inputActions.Player.Dash.performed += ctx => DashMovement(); //Se ejecuta cada ves que dispare
-
-
 	}
 
 
@@ -100,12 +107,29 @@ public class Player : MonoBehaviour
             Debug.Log($"Level = {PlayerPrefs.GetInt("level")}  --- {level} Exp = {PlayerPrefs.GetFloat("exp")} ------- {exp}  ");
             PlayerPref.LoadStats();
         }
+
+        currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
+        totalAmmoText.text = $"{total_Ammo}";
+        lvlText.text = level.ToString();
+        UpdateMusicBackgroud();
+    }
+
+
+    void UpdateMusicBackgroud()
+    {
+        // cada nivel se cambia la música de fondo y si no hay más música se reinicia
+        int aux = mapLevel;
+        if (aux > musicBackground.Count)
+        {
+            aux = aux % musicBackground.Count;
+        }
+        AudioManager.instance.SetMusic(musicBackground[aux]);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentAmmo <= 0 && !isReloading)
+        if (currentAmmo <= 0 && !isReloading && total_Ammo >0)
         {
             // Solo inicia la recarga si no estás recargando
             CheckReload(); // Esto reproducirá el sonido
@@ -161,7 +185,7 @@ public class Player : MonoBehaviour
 
     private void CheckReload()
     {
-        if (currentAmmo != magazineSize && !isReloading)
+        if (currentAmmo != magazineSize && !isReloading && total_Ammo > 0)
         {
             isReloading = true;
             AudioManager.instance.PlaySFX(rifleReloadSound);
@@ -170,7 +194,15 @@ public class Player : MonoBehaviour
     }
     public void IncreaseHealth(float healthToIncrease)
     {
-        health += healthToIncrease;
+        if (health + healthToIncrease > maxHealth)
+        {
+            health = maxHealth;
+        }
+        else
+        {
+            health += healthToIncrease;
+        }
+
         HealthCheck(true);
     }
     public void HealthCheck(bool posi)
@@ -255,10 +287,17 @@ public class Player : MonoBehaviour
             AudioManager.instance.PlaySFX(rifleShootSound);
             Instantiate(bulletPrefab, firePoint.position, transform.rotation);
             currentAmmo--;
+            currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
 
             //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             //bullet.GetComponent<Bullet>().playerBullet = true;
         }
+    }
+
+
+    public void AddShoot(int n)
+    {      
+       currentAmmo += n;
     }
 
     void Reload()
@@ -274,6 +313,8 @@ public class Player : MonoBehaviour
             currentAmmo = total_Ammo;
             total_Ammo = 0;
         }
+        currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
+        totalAmmoText.text = $"{total_Ammo}";
         timerReload = 0;
         isReloading = false;
     }

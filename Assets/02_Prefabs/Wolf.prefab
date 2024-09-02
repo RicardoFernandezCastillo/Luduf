@@ -331,10 +331,16 @@ MonoBehaviour:
   firePoint3: {fileID: 0}
   firePoint4: {fileID: 0}
   bulletPrefab: {fileID: 0}
-  rb: {fileID: 0}
+  rb: {fileID: 2704810613493417489}
   enemyType: 1
-  healthSlider: {fileID: 0}
+  healthSlider: {fileID: 7254938407952491791}
   room: {fileID: 0}
+  vampireAttackSound: {fileID: 0}
+  wolfAttackSound: {fileID: 0}
+  batAttackSound: {fileID: 0}
+  playerDeathSound: {fileID: 0}
+  GameOverSound: {fileID: 0}
+  levelUpSound: {fileID: 0}
 --- !u!33 &2368118386013690610
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -363,7 +369,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1c5b3d64ca5201f4dbe083ad75b352ba, type: 2}
+  - {fileID: 2100000, guid: 39e027c58969aa543ab93dd7db1ebed0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -82,6 +82,7 @@ public class PlayerPref : MonoBehaviour
         player.cuantityDashes = PlayerPrefs.GetInt("cuantityDashes", player.cuantityDashes);
         player.timeToRechargeDash = PlayerPrefs.GetFloat("timeToRechargeDash", player.timeToRechargeDash);
         player.total_Ammo = PlayerPrefs.GetInt("totalAmmo", player.total_Ammo);
+        player.mapLevel = PlayerPrefs.GetInt("mapLevel", player.mapLevel);
 
         if (h_aux > PlayerPrefs.GetFloat("health", player.health))
         {
@@ -108,6 +109,7 @@ public class PlayerPref : MonoBehaviour
         PlayerPrefs.SetInt("cuantityDashes", player.cuantityDashes);
         PlayerPrefs.SetFloat("timeToRechargeDash", player.timeToRechargeDash);
         PlayerPrefs.SetInt("totalAmmo", player.total_Ammo);
+        PlayerPrefs.SetInt("mapLevel", player.mapLevel);
     }
     //private void OnLevelWasLoaded(int level)
     //{
