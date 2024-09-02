@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.042866625, g: 0.040343355, b: 0.044389315, a: 1}
+  m_IndirectSpecularColor: {r: 0.04285635, g: 0.040333685, b: 0.044378065, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -365,6 +365,8 @@ MonoBehaviour:
   RoomType:
   - {fileID: 8793532146489598755, guid: 424bcd6721767744ca4b26fc263e61c0, type: 3}
   - {fileID: 8793532146489598755, guid: 9714205918e83fa4fbcc538c76a9f0b2, type: 3}
+  - {fileID: 8793532146489598755, guid: 8589d60fc462cbf42ac9beffcc8dec76, type: 3}
+  - {fileID: 8793532146489598755, guid: 382b53d577eb32b429198a9aeeb6047b, type: 3}
   size: {x: 5, y: 5}
   startPos: 0
   offset: {x: 14, y: 14}
@@ -1755,7 +1757,7 @@ MonoBehaviour:
   timeToRechargeDash: 5
   total_Ammo: 70
   magazineSize: 15
-  currentAmmo: 15
+  currentAmmo: 100
   timeToReload: 3
   rb: {fileID: 1237837259}
   bulletPrefab: {fileID: 6583962979105591055, guid: 17f6186ba3dd74048ab17abcb239a5c7, type: 3}
@@ -2239,7 +2241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicAS: {fileID: 1678923238}
   sfxAS: {fileID: 1678923238}
-  sfxVol: 0.61
+  sfxVol: 0
   musicVol: 0.14
 --- !u!4 &1678923240
 Transform:
