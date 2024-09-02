@@ -214,6 +214,8 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+
     private void VampireBehaviour()
     {
         if (target != null)

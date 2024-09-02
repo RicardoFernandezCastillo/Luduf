@@ -499,6 +499,8 @@ MonoBehaviour:
   RoomType:
   - {fileID: 8793532146489598755, guid: 424bcd6721767744ca4b26fc263e61c0, type: 3}
   - {fileID: 8793532146489598755, guid: 9714205918e83fa4fbcc538c76a9f0b2, type: 3}
+  - {fileID: 8793532146489598755, guid: 8589d60fc462cbf42ac9beffcc8dec76, type: 3}
+  - {fileID: 8793532146489598755, guid: 382b53d577eb32b429198a9aeeb6047b, type: 3}
   size: {x: 5, y: 5}
   startPos: 0
   offset: {x: 14, y: 14}
@@ -2191,9 +2193,9 @@ MonoBehaviour:
   maxExp: 60
   cuantityDashes: 2
   timeToRechargeDash: 5
-  total_Ammo: 70
+  total_Ammo: 500
   magazineSize: 15
-  currentAmmo: 15
+  currentAmmo: 100
   timeToReload: 3
   mapLevel: 1
   rb: {fileID: 1237837259}

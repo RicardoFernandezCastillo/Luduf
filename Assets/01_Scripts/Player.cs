@@ -294,6 +294,12 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    public void AddShoot(int n)
+    {      
+       currentAmmo += n;
+    }
+
     void Reload()
     {
         if (total_Ammo >= magazineSize)

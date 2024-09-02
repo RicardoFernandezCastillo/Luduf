@@ -15,20 +15,23 @@ public class RoomBehaviour : MonoBehaviour
 	public RoomType type = RoomType.StartRoom;
 	
 	public List<Transform> positions;
-	public List<GameObject> prefabsEnemys;
+
+	//public List<GameObject> prefabsEnemys;
+	public GameObject prefabEnemy;
 
 	//para la Iluminasion
 	public List<GameObject> FirePoint;
 	public float activationDelay = 0.5f;  // Tiempo entre la activación de cada punto.
 
+	//------------------------------------------------
 	public GameObject prefCopper;
 	public List<Transform> copperPosition; //la  posicion de donde se va a instanciar eel cofre
 
 	public enum RoomType
 	{
 		StartRoom,
-		NormalRoom, //generaar cofres aleatorios
-		SpiderRoom, //Inst
+		NormalRoom,
+		SpiderRoom, 
 		VampireRoom,
 		WolfRoom,
 		BossRoom
@@ -75,8 +78,16 @@ public class RoomBehaviour : MonoBehaviour
 				copperInstanse();
 				break;
 			case RoomType.SpiderRoom:
-				CloseDoors();//Serramos las Puertas
-				InstanceEnemySpider();//Intanciamos los nemigos
+				CloseDoors();
+				InstanceEnemy();
+				break;
+			case RoomType.WolfRoom:
+				CloseDoors();
+				InstanceEnemy();
+				break;
+			case RoomType.VampireRoom:
+				CloseDoors();
+				InstanceEnemy();
 				break;
 			case RoomType.BossRoom:
 				CloseDoors();
@@ -84,7 +95,6 @@ public class RoomBehaviour : MonoBehaviour
 
                 PlayerPref.SaveStats();
                 SceneManager.LoadScene("PlayerScene");
-
                 break;
 		}
 	}
@@ -104,17 +114,10 @@ public class RoomBehaviour : MonoBehaviour
 
 
 
-	void InstanceEnemySpider()
-	{
-		if (visited)
-		{
-			instanceEnemy();
-			visited = false;
-		}
-	}
+	
 
 
-
+	//para poder cerrar las Puestas
 	void CloseDoors()
 	{
 		if (visited)
@@ -130,7 +133,7 @@ public class RoomBehaviour : MonoBehaviour
 		}
 	}
 	
-
+	//para poder Activcar las luces del Cuarto
 	IEnumerator ActivateFirePointsConsecutively()
 	{
 		for (int i = 0; i < FirePoint.Count; i++)
@@ -143,7 +146,7 @@ public class RoomBehaviour : MonoBehaviour
 
 
 
-
+	//Para poder Abrir las puertas
 	void OpenDoors()
 	{
 		if (!roomCleared)
@@ -184,6 +187,18 @@ public class RoomBehaviour : MonoBehaviour
 	}
 
 
+
+
+	//Para poder Instanciar al enemigo
+	void InstanceEnemy()
+	{
+		if (visited)
+		{
+			instanceEnemy();
+			visited = false;
+		}
+	}
+
 	//para poder instanciar enemigos -------------------------------------------------------------------
 	void  instanceEnemy()
 	{
@@ -191,7 +206,7 @@ public class RoomBehaviour : MonoBehaviour
 		{
 			if (!auxWall[i])
 			{
-				GameObject enemy = Instantiate(prefabsEnemys[0], positions[i].position, positions[i].rotation);
+				GameObject enemy = Instantiate(prefabEnemy, positions[i].position, positions[i].rotation);
 				Enemy enemyComponent = enemy.GetComponent<Enemy>();
 				if (enemyComponent != null)
 				{
