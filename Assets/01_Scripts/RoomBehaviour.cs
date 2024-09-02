@@ -80,7 +80,9 @@ public class RoomBehaviour : MonoBehaviour
 				break;
 			case RoomType.BossRoom:
 				CloseDoors();
-				PlayerPref.SaveStats();
+                FindObjectOfType<Player>().mapLevel++;
+
+                PlayerPref.SaveStats();
                 SceneManager.LoadScene("PlayerScene");
 
                 break;

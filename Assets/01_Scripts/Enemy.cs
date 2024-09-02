@@ -27,7 +27,9 @@ public class Enemy : MonoBehaviour
     public Rigidbody rb;
     public EnemyType enemyType;
 
+    [Header("UI")]
     public Slider healthSlider;
+
 
     public RoomBehaviour room;
 
@@ -79,33 +81,33 @@ public class Enemy : MonoBehaviour
 
     void AssignStats()
     {
-        switch (enemyType)
+        // cada 3 niveles que el player suba, los enemigos suben de nivel
+        if(player.level % 3 == 0)
         {
-            case EnemyType.Vampire:
-                //life = 2f;
-                //maxLife = 2f;
-                //timeToDestroy = 10f;
-                //damage = 1f;
-                //timeBtwAttack = 1f;
-                xpGiven = 4f;
-                break;
-            case EnemyType.Wolf:
-                //life = 3f;
-                //maxLife = 3f;
-                //timeToDestroy = 10f;
-                //damage = 1f;
-                //timeBtwAttack = 1f;
-                xpGiven = 3f;
-                break;
-            case EnemyType.Bat:
-                //life = 1f;
-                //maxLife = 1f;
-                //timeToDestroy = 10f;
-                //damage = 1f;
-                //timeBtwAttack = 1f;
-                xpGiven = 2f;
-                break;
+            //segun el tipo de enemigo, se le asignan stats diferentes
+            switch (enemyType)
+            {
+                case EnemyType.Vampire:
+                    life += 2f;
+                    maxLife += 2f;
+                    damage += 1f;
+                    xpGiven += 2f;
+                    break;
+                case EnemyType.Wolf:
+                    life += 1f;
+                    maxLife += 1f;
+                    damage += 1f;
+                    xpGiven += 1f;
+                    break;
+                case EnemyType.Bat:
+                    life += 1f;
+                    maxLife += 1;
+                    damage += 1f;
+                    xpGiven += 1f;
+                    break;
+            }
         }
+
     }
 
     private void PlayerLocation()
