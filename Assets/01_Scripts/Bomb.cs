@@ -13,6 +13,8 @@ public class Bomb : MonoBehaviour
 
 	private bool hasExploded = false;
 
+	public ParticleSystem explosionEffect;
+
 	void Start()
 	{
 		// Inicia la cuenta regresiva para la explosión
@@ -62,7 +64,7 @@ public class Bomb : MonoBehaviour
 
 
 		}
-
+		explosionEffect.Play();
 		// Destruir la bomba después de la explosión
 		Destroy(gameObject);
 	}
@@ -73,4 +75,5 @@ public class Bomb : MonoBehaviour
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, explosionRadius);
 	}
+
 }

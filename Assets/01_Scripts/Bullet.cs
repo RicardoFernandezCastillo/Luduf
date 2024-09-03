@@ -97,7 +97,7 @@ public class Bullet : MonoBehaviour
         switch (typeOfEnemy)
         {
             case TypeOfEnemy.Spider:
-                player.TakeDebuffVelocity(2f, 0.2f);
+                player.TakeDebuffVelocity(2f, 0.5f);
                 player.TakeDamage(damage);
                 break;
             case TypeOfEnemy.Vampire:
@@ -114,13 +114,13 @@ public class Bullet : MonoBehaviour
     private void HandleEnemyCollision(Collider collision)
     {
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-        if (bulletType == BulletType.Player) // si la bala es del jugador, hace daño al enemigo
+        if (bulletType == BulletType.Player) // si la bala es del jugador, hace daï¿½o al enemigo
         {
-            enemy.TakeDamage(damage, true); // true porque es daño del jugador
+            enemy.TakeDamage(damage, true); // true porque es daï¿½o del jugador
         }
         else
         {
-            enemy.TakeDamage(damage, false); // false porque es daño de un enemigo
+            enemy.TakeDamage(damage, false); // false porque es daï¿½o de un enemigo
         }
         Destroy(gameObject);
     }
