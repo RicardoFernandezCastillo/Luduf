@@ -75,10 +75,10 @@ public class Player : MonoBehaviour
 
     NewInputSystem inputActions;//--
     Vector2 dir = Vector2.zero;
+    public bool isDebuffVelocity = false;
 
     #region aux
-        private float timerDebuffVelocity = 0f;
-        private bool isDebuffVelocity = false;
+    private float timerDebuffVelocity = 0f;
         private float timeDebuffVelocity = 2f;
         private float percentDebuffVelocity = 0.2f;
     #endregion
@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
     {
         // cada nivel se cambia la música de fondo y si no hay más música se reinicia
         int aux = mapLevel;
-        if (aux > musicBackground.Count)
+        if (aux >= musicBackground.Count)
         {
             aux = aux % musicBackground.Count;
         }
@@ -437,23 +437,41 @@ public class Player : MonoBehaviour
     
     public void TakeDebuffVelocity(float timeDebuff, float percent)
     {
-        isDebuffVelocity = true;
-        percentDebuffVelocity = percent;
-        timeDebuffVelocity = timeDebuff;
-        
-        speed = speed * percentDebuffVelocity;
+        // si ya hay un debuff de velocidad, se reinicia el timer y no se vuelve a reducir la velocidad
+
+        if (!isDebuffVelocity)
+        {
+
+            isDebuffVelocity = true;
+            percentDebuffVelocity = percent;
+            timeDebuffVelocity = timeDebuff;
+
+            speed = speed * percentDebuffVelocity;
+        }
+        else if (isDebuffVelocity)
+        {
+            //reiniciar el timer
+            timerDebuffVelocity = 0;
+
+        }
+
+
 
     }
     private void CheckDebuffVelocity()
     {
         if (isDebuffVelocity)
         {
-            timerDebuffVelocity += Time.deltaTime;
             if (timerDebuffVelocity >= timeDebuffVelocity)
             {
                 timerDebuffVelocity = 0f;
                 isDebuffVelocity = false;
-                speed = speed / percentDebuffVelocity;
+                speed = speed / percentDebuffVelocity; //PlayerPrefs.GetFloat("speed");
+                //Debug.Log("El Debuff se fueeeee");
+            }
+            else
+            {
+                timerDebuffVelocity += Time.deltaTime;
 
             }
 

@@ -184,7 +184,6 @@ public class Enemy : MonoBehaviour
 
 		if (Vector3.Distance(transform.position, target.position) > 10f)
 		{
-
 			transform.Translate(Vector3.forward * speed * Time.deltaTime);
 		}
 		if (Vector3.Distance(transform.position, target.position) < 10f)
@@ -196,7 +195,7 @@ public class Enemy : MonoBehaviour
 
 				Instantiate(bulletPrefab, firePoint.position, transform.rotation);
 				bulletPrefab.GetComponent<Bullet>().bulletType = Bullet.BulletType.Enemy;
-				bulletPrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Bat;
+				bulletPrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Spider;
 				//bulletPrefab.GetComponent<Bullet>().damage = 1f;
 
 				//AudioManager.instance.PlaySFX(batAttackSound);

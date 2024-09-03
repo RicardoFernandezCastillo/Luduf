@@ -107,6 +107,11 @@ public class Bullet : MonoBehaviour
                 //player.TakeDebuffVelocity(2f, 0.2f);
                 player.TakeDamage(damage);
                 break;
+
+            //Boses:
+            case TypeOfEnemy.Dracula:
+                player.TakeDamage(damage * 0.5f);
+                break;
         }
         Destroy(gameObject);
     }

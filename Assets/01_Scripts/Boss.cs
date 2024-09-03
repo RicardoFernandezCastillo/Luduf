@@ -38,7 +38,7 @@ public class Boss : MonoBehaviour
 
     // Variables privadas
     private float timer = 0f;
-    private bool canAttack = false;
+    private bool canAttack = true;
     private Transform target;
 
     private Player player;
@@ -62,7 +62,7 @@ public class Boss : MonoBehaviour
 
     bool isMovingRight = true;
 
-    int currentPhase = 1;
+    //int currentPhase = 1;
 
     float timerMovement = 0f;
     float timerBtwMovement = 3.5f;
@@ -207,29 +207,29 @@ public class Boss : MonoBehaviour
         {
             healthSlider.value = life / maxLife;
         }
+
     }
 
 
 
     private void DraculaBehaviour()
     {
-        if (life / maxLife > 0.5) //0.83
+        if (life / maxLife > 0.75) //0.83
         {
-            currentPhase = 1;
+            //currentPhase = 1;
             FirstPhase(); //Primera Fase Ataque apuntado estatico
         }
-        else //if (life / maxLife > 0.67)
+        else if (life / maxLife >= 0.5)
         {
-            currentPhase = 2;
+            //currentPhase = 2;
             SecondPhase(); //Segunda Fase Ataque apuntado con movimiento del Boss
         }
-        //else if (life / maxLife > 0.25)
-        //{
-        //    currentPhase = 3;
-        //    ThirdPhase(); // Tercera Fase Ataque multiple estatico 
+        else if (life / maxLife > 0)
+        {
+            //currentPhase = 3;
+            ThirdPhase(); // Tercera Fase Ataque multiple estatico 
 
-        ////Increase
-        //}
+        }
         //else if (life / maxLife > 0f) //Ultima Fasw
         //{
         //    currentPhase = 4;
@@ -242,31 +242,10 @@ public class Boss : MonoBehaviour
 
     private void ThirdPhase()
     {
-        //Dracula se teletransporta en frente del jugador y lo ataca, luego vuelve a su posicion original
         if (target != null)
         {
-            // tranportar a Dracula en frente del jugador es decir a 4 unidades de distancia
-            Transform aux = transform;
-            transform.position = Vector3.MoveTowards(transform.position, target.position, 2f * Time.deltaTime);
-
-        }
-
-    }
-
-    private void SecondPhase()
-    {
-
-        //rb.velocity = new Vector3(0, 0, 0);
-        if (target != null)
-        {
-            Vector3 dir = objetivo.position - transform.position;
-            float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, angle, 0);
             //Shoot();
-
-
-
-
+            /*
             if (timerMovement < timerBtwMovement)
             {
                 timerMovement += Time.deltaTime;
@@ -288,28 +267,11 @@ public class Boss : MonoBehaviour
                 isMovingRight = !isMovingRight;
                 //probabilidad de 30% de teletransportarse
 
-                //if (UnityEngine.Random.Range(0, 100) < 30)
-                //{
-                //    // Calcula la dirección hacia el jugador
-                //    Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
 
-                //    // Calcula la nueva posición
-                //    Vector3 newPosition = player.transform.position - directionToPlayer * 2f;
+            } */
 
-                //    // Teletransporta a Drácula a la nueva posición
-                //    transform.position = newPosition;
 
-                //    Debug.Log("Dracula se teletransporta");
-                //}
-            }
-        }
-    }
-
-    private void FirstPhase()
-    {
-        if (target != null)
-        {
-            if (Vector3.Distance(transform.position, target.position) > 1.5f && canAttack)
+            if (Vector3.Distance(transform.position, target.position) > 9.3f && canAttack)
             {
 
                 Vector3 dir = target.position - transform.position;
@@ -320,16 +282,123 @@ public class Boss : MonoBehaviour
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
             }
             //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
-            if (Vector3.Distance(transform.position, target.position) <= 1.5f)
+            if (Vector3.Distance(transform.position, target.position) <= 2.3f)
             {
                 if (canAttack)
                 {
-                    Debug.Log("El Jefe Dracula Atac�");
+
+                    // Calcula la dirección hacia el jugador
+                    Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+                    // Calcula la nueva posición
+                    Vector3 newPosition = player.transform.position - directionToPlayer * 2f;
+
+                    // Teletransporta a Drácula a la nueva posición
+                    transform.position = newPosition;
+
+                    Debug.Log("Dracula se teletransporta");
+                    Debug.Log("El Jefe Dracula Ataco");
+                    player.TakeDamage(damage* 0.5f);
+                    canAttack = false;
+
+                }
+            }
+
+            if (!canAttack)
+            {
+                timer += Time.deltaTime;
+                if (timer >= timeBtwAttack)
+                {
+                    canAttack = true;
+                    timer = 0f;
+                }
+            }
+
+
+
+
+
+
+            //if (UnityEngine.Random.Range(0, 100) < 30)
+            //{
+            //    // Calcula la dirección hacia el jugador
+            //    Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+            //    // Calcula la nueva posición
+            //    Vector3 newPosition = player.transform.position - directionToPlayer * 2f;
+
+            //    // Teletransporta a Drácula a la nueva posición
+            //    transform.position = newPosition;
+
+            //    Debug.Log("Dracula se teletransporta");
+            //}
+
+        }
+
+
+    }
+
+    private void SecondPhase()
+    {
+
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
+        {
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Vector3.Distance(transform.position, target.position) <= 10f)
+        {
+            if (canAttack)
+            {
+                Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+                bulletPrefab.GetComponent<Bullet>().bulletType = Bullet.BulletType.Boss;
+                bulletPrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
+
+                Debug.Log("El Jefe Dracula lanzo su ataque");
+                canAttack = false;
+            }
+        }
+        if (!canAttack)
+        {
+            timer += Time.deltaTime;
+            if (timer >= timeBtwAttack)
+            {
+                canAttack = true;
+                timer = 0f;
+            }
+        }
+    }
+
+    private void FirstPhase()
+    {
+
+
+
+        if (target != null)
+        {
+            if (Vector3.Distance(transform.position, target.position) > 2.3f && canAttack)
+            {
+
+                Vector3 dir = target.position - transform.position;
+                float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0, angle, 0);
+
+
+                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            }
+            //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
+            if (Vector3.Distance(transform.position, target.position) <= 2.3f)
+            {
+                if (canAttack)
+                {
+                    Debug.Log("El Jefe Dracula Ataco");
                     player.TakeDamage(damage);
                     canAttack = false;
 
                 }
-
             }
 
             if (!canAttack)
