@@ -9336,7 +9336,7 @@ MonoBehaviour:
   - {fileID: 5558469087454198864}
   - {fileID: 6718559026526993117}
   - {fileID: 5464425351539500562}
-  prefabEnemy: {fileID: 5398204106609266246, guid: bdd4514a4073a02409e6f976f42df858, type: 3}
+  prefabEnemy: {fileID: 5398204106609266246, guid: deee4039642f4604cb9aac2adf99d028, type: 3}
   FirePoint:
   - {fileID: 1371532149834232376}
   - {fileID: 4272263000017638780}

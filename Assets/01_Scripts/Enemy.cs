@@ -51,9 +51,10 @@ public class Enemy : MonoBehaviour
     public AudioClip levelUpSound;
 
 
+	public Animator animator;
 
 
-    void Start()
+	void Start()
     {
 
         EnemiesStats();
@@ -136,7 +137,10 @@ public class Enemy : MonoBehaviour
             case EnemyType.Bat:
                 BatBehaviour();
                 break;
-        }
+			case EnemyType.Spider:
+				SpiderBehaviour();
+				break;
+		}
     }
 
     private void BatBehaviour()
@@ -171,32 +175,63 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void WolfBehaviour()
+
+    public void SpiderBehaviour()
+    {
+		Vector3 dir = target.position - transform.position;
+		float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(0, angle, 0);
+
+		if (Vector3.Distance(transform.position, target.position) > 10f)
+		{
+
+			transform.Translate(Vector3.forward * speed * Time.deltaTime);
+		}
+		if (Vector3.Distance(transform.position, target.position) < 10f)
+		{
+			if (timer >= timeBtwAttack)
+			{
+				timer = 0f;
+				// Instanciar bala y asignar a la bala el daño que hace
+
+				Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+				bulletPrefab.GetComponent<Bullet>().bulletType = Bullet.BulletType.Enemy;
+				bulletPrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Bat;
+				//bulletPrefab.GetComponent<Bullet>().damage = 1f;
+
+				//AudioManager.instance.PlaySFX(batAttackSound);
+			}
+			else
+			{
+				timer += Time.deltaTime;
+			}
+		}
+	}
+
+	private void WolfBehaviour()
     {
         if (target != null)
         {
             //si la distancia entre el enemigo y el jugador es menor a 15 y mayor a 3 el enemigo se mueve hacia el jugador
-            if (Vector3.Distance(transform.position, target.position) > 1.5f && canAttack)
+            if (Vector3.Distance(transform.position, target.position) > 2.3f && canAttack)
             {
-
                 Vector3 dir = target.position - transform.position;
                 float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0, angle, 0);
 
-
+                animator.SetFloat("Speed", 1);
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
             }
             //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
-            if (Vector3.Distance(transform.position, target.position) <= 1.5f)
+            if (Vector3.Distance(transform.position, target.position) <= 2.3f)
             {
                 if (canAttack)
                 {
                     Debug.Log("El Lobo Atac�");
+                    animator.SetTrigger("Attack");
                     player.TakeDamage(damage);
                     canAttack = false;
-
                 }
-
             }
 
             if (!canAttack)
@@ -210,6 +245,12 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+
+
+
+
+
 
     private void HealthCheck()
     {

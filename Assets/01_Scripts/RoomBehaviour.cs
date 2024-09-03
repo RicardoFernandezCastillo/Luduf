@@ -32,7 +32,7 @@ public class RoomBehaviour : MonoBehaviour
 		StartRoom,
 		NormalRoom,
 		SpiderRoom, 
-		VampireRoom,
+		Bat,
 		WolfRoom,
 		BossRoom
 	}
@@ -85,7 +85,7 @@ public class RoomBehaviour : MonoBehaviour
 				CloseDoors();
 				InstanceEnemy();
 				break;
-			case RoomType.VampireRoom:
+			case RoomType.Bat:
 				CloseDoors();
 				InstanceEnemy();
 				break;
