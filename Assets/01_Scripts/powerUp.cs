@@ -8,6 +8,8 @@ public class powerUp : MonoBehaviour
 
 	public Player player;
 	// Start is called before the first frame update
+
+	public AudioClip powerUpSound;
 	public enum powerUps
 	{
 		powerLife,
@@ -44,7 +46,11 @@ public class powerUp : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.CompareTag("Player"))
+        if (powerUpSound != null)
+        {
+			AudioManager.instance.PlaySFX(powerUpSound);
+        }
+        if (collision.gameObject.CompareTag("Player"))
 		{
 			Debug.Log("Entro a la Colicion");
 			player = collision.gameObject.GetComponent<Player>();

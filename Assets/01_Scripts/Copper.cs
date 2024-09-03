@@ -8,6 +8,8 @@ public class Copper : MonoBehaviour
     public List<GameObject> PowerPrefas;
     public Transform transCopper;
     bool isInstanse = true;
+
+    public AudioClip itemSpawn;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,10 @@ public class Copper : MonoBehaviour
 			{
 				int p = Random.Range(0, PowerPrefas.Count);
 				Instantiate(PowerPrefas[p], transCopper.position, transCopper.rotation);
+                if (itemSpawn != null)
+                {
+                    AudioManager.instance.PlaySFX(itemSpawn);
+                }
 			}
 			isInstanse=false;
 		}
@@ -46,6 +52,7 @@ public class Copper : MonoBehaviour
             Destroy(gameObject);
             Debug.Log("Entro para el cofre ");
             InstancePower();
+
 
 			Destroy(other.gameObject);
 

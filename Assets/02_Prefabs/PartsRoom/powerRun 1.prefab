@@ -200,6 +200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   player: {fileID: 0}
+  powerUpSound: {fileID: 8300000, guid: 3b06b624f0d9bef478913d2569b3b394, type: 3}
 --- !u!33 &3544325477213958235
 MeshFilter:
   m_ObjectHideFlags: 0
