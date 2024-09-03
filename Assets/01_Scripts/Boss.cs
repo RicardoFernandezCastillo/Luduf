@@ -62,7 +62,6 @@ public class Boss : MonoBehaviour
 
     bool isMovingRight = true;
 
-
     int currentPhase = 1;
 
     float timerMovement = 0f;
@@ -257,7 +256,7 @@ public class Boss : MonoBehaviour
     private void SecondPhase()
     {
 
-        rb.velocity = new Vector3(0, 0, 0);
+        //rb.velocity = new Vector3(0, 0, 0);
         if (target != null)
         {
             Vector3 dir = objetivo.position - transform.position;

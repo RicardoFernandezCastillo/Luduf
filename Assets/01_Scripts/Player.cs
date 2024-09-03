@@ -69,6 +69,10 @@ public class Player : MonoBehaviour
     public List<AudioClip> musicBackground;
     //public AudioClip gam;
 
+
+    public Animator animator;
+
+
     NewInputSystem inputActions;//--
     Vector2 dir = Vector2.zero;
 
@@ -246,8 +250,24 @@ public class Player : MonoBehaviour
 	void Movement()
 	{
 		// Mueve al jugador en la dirección del joystick
-		rb.velocity = new Vector3(dir.x * speed, 0, dir.y * speed);
 
+		rb.velocity = new Vector3(dir.x * speed, 0, dir.y * speed);
+        float n = 0;
+        if (dir.x != 0)
+        {
+            n = Mathf.Abs(dir.x);
+		}else if (dir.y != 0)
+        {
+           n = Mathf.Abs(dir.y);
+        }
+        else
+        {
+            n = 0 ;
+        }
+
+
+		//Debug.Log("Eje x : " + n);
+		animator.SetFloat("Speed", n );
 		// Si hay movimiento, rota al jugador hacia la dirección del joystick
 		if (dir != Vector2.zero)
 		{
@@ -308,7 +328,7 @@ public class Player : MonoBehaviour
             Instantiate(bulletPrefab, firePoint.position, transform.rotation);
             currentAmmo--;
             currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
-
+            animator.SetTrigger("Shoot");
             //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             //bullet.GetComponent<Bullet>().playerBullet = true;
         }
