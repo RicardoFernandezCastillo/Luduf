@@ -24,8 +24,8 @@ public class PlayerPref : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Save();
-        Load();
+        //Save();
+        //Load();
     }
     void Save()
     {
@@ -39,6 +39,7 @@ public class PlayerPref : MonoBehaviour
             PlayerPrefs.SetInt("cuantityDashes", player.cuantityDashes);
             PlayerPrefs.SetFloat("timeToRechargeDash", player.timeToRechargeDash);
             PlayerPrefs.SetInt("totalAmmo", player.total_Ammo);
+            PlayerPrefs.SetInt("mapLevel", player.mapLevel);
             
         }
     }
@@ -55,6 +56,7 @@ public class PlayerPref : MonoBehaviour
             player.cuantityDashes = PlayerPrefs.GetInt("cuantityDashes", player.cuantityDashes);
             player.timeToRechargeDash = PlayerPrefs.GetFloat("timeToRechargeDash", player.timeToRechargeDash);
             player.total_Ammo = PlayerPrefs.GetInt("totalAmmo", player.total_Ammo);
+            player.mapLevel = PlayerPrefs.GetInt("mapLevel", player.mapLevel);
 
             if (h_aux > PlayerPrefs.GetFloat("health", player.health))
             {
@@ -74,15 +76,24 @@ public class PlayerPref : MonoBehaviour
     {
         Player player = FindObjectOfType<Player>();
         float h_aux = player.health;
+
         player.health = PlayerPrefs.GetFloat("health", player.health);
         player.maxHealth = PlayerPrefs.GetFloat("maxHealth", player.maxHealth);
+
         player.level = PlayerPrefs.GetInt("level", player.level);
         player.exp = PlayerPrefs.GetFloat("exp", player.exp);
         player.maxExp = PlayerPrefs.GetFloat("maxExp", player.maxExp);
+
         player.cuantityDashes = PlayerPrefs.GetInt("cuantityDashes", player.cuantityDashes);
         player.timeToRechargeDash = PlayerPrefs.GetFloat("timeToRechargeDash", player.timeToRechargeDash);
+
+        player.bulletPenetrationProbability = PlayerPrefs.GetFloat("bulletPenetrationProbability", player.bulletPenetrationProbability);
         player.total_Ammo = PlayerPrefs.GetInt("totalAmmo", player.total_Ammo);
+        player.currentAmmo = PlayerPrefs.GetInt("currentAmmo", player.currentAmmo);
+        player.magazineSize = PlayerPrefs.GetInt("magazineSize", player.magazineSize);
+
         player.mapLevel = PlayerPrefs.GetInt("mapLevel", player.mapLevel);
+
 
         if (h_aux > PlayerPrefs.GetFloat("health", player.health))
         {
@@ -103,13 +114,21 @@ public class PlayerPref : MonoBehaviour
         Player player = FindObjectOfType<Player>();
         PlayerPrefs.SetFloat("health", player.health);
         PlayerPrefs.SetFloat("maxHealth", player.maxHealth);
+
         PlayerPrefs.SetInt("level", player.level);
         PlayerPrefs.SetFloat("exp", player.exp);
         PlayerPrefs.SetFloat("maxExp", player.maxExp);
+
         PlayerPrefs.SetInt("cuantityDashes", player.cuantityDashes);
         PlayerPrefs.SetFloat("timeToRechargeDash", player.timeToRechargeDash);
+
+        PlayerPrefs.SetFloat("bulletPenetrationProbability", player.bulletPenetrationProbability);
         PlayerPrefs.SetInt("totalAmmo", player.total_Ammo);
+        PlayerPrefs.SetInt("currentAmmo", player.currentAmmo);
+        PlayerPrefs.SetInt("magazineSize",player.magazineSize);
+
         PlayerPrefs.SetInt("mapLevel", player.mapLevel);
+
     }
     //private void OnLevelWasLoaded(int level)
     //{

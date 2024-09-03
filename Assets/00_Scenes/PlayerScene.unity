@@ -873,9 +873,9 @@ RectTransform:
   - {fileID: 1587978843}
   m_Father: {fileID: 1873744371}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 314.4, y: 116.8}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -400, y: -189}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &667726576
@@ -2193,9 +2193,10 @@ MonoBehaviour:
   maxExp: 60
   cuantityDashes: 2
   timeToRechargeDash: 5
+  bulletPenetrationProbability: 0.1
   total_Ammo: 500
   magazineSize: 15
-  currentAmmo: 100
+  currentAmmo: 15
   timeToReload: 3
   mapLevel: 1
   rb: {fileID: 1237837259}
@@ -2644,7 +2645,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1.2364, y: -5}
+  m_AnchoredPosition: {x: 326, y: 114}
   m_SizeDelta: {x: 205.9491, y: 25.7481}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1587978844

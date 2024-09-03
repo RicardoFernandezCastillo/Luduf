@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,11 @@ public class Bullet : MonoBehaviour
     public float speed = 6f;
     public float timeToDestroy = 4;
     public float damage = 1f;
-    public bool playerBullet = false;
+
+    public BulletType bulletType;
+    public TypeOfEnemy typeOfEnemy;
+
+    public bool hasPenetration = false;
 
     void Start()
     {
@@ -21,41 +26,119 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (playerBullet && collision.gameObject.CompareTag("Enemy"))
+        switch (collision.gameObject.tag)
         {
-            Enemy e = collision.gameObject.GetComponent<Enemy>();
-            e.TakeDamage(damage, true);
+            case "Enemy":
+                HandleEnemyCollision(collision);
+                break;
+            case "Player":
+                HandlePlayerCollision(collision);
+                break;
+            case "Bullet":
+                HandleBulletCollision(collision);
+                break;
+            case "Boss":
+                HandleBossCollision(collision);
+                break;
+        }
+    }
+
+    private void HandleBossCollision(Collider collision)
+    {
+        Boss boss = collision.gameObject.GetComponent<Boss>();
+        if (bulletType == BulletType.Player)
+        {
+            boss.TakeDamage(damage, true);
             Destroy(gameObject);
         }
-        else if (collision.gameObject.CompareTag("Enemy")) // && !playerBullet si un enemigo dispara a otro enemigo
+    }
+
+    private void HandleBulletCollision(Collider collider)
+    {
+        if (hasPenetration) // si no penetra, se destruye al colisionar con otra bala
         {
-            Enemy e = collision.gameObject.GetComponent<Enemy>();
-            e.TakeDamage(damage, false);
-            Destroy(gameObject);
+            // si ambas balas son penetrantes, no se destruyen
+            if (collider.gameObject.GetComponent<Bullet>().hasPenetration)
+            {
+                return;
+            }
+            else
+            {
+                // Si la bala es del jugador y es penetrante y colisiona con una bala enemiga, se destruye la bala enemiga
+                if (bulletType == BulletType.Player)
+                {
+                    Destroy(collider.gameObject);
+                }
+                // Si la bala es de un enemigo y es penetrante y colisiona con una bala del jugador, se destruye la bala del jugador
+                else
+                {
+                    Destroy(gameObject);
+                }
+            }
+
+
         }
-        else if (!playerBullet && collision.gameObject.CompareTag("Player"))
+        // Si las balas del player colisionan entre si no destroza ninguna
+        else if (bulletType == BulletType.Player && collider.gameObject.GetComponent<Bullet>().bulletType == BulletType.Player)
         {
-            Player p = collision.gameObject.GetComponent<Player>();
-            p.TakeDamage(damage);
-            Destroy(gameObject);
+            return;
         }
-        else if (collision.gameObject.CompareTag("Bullet"))
+        else
         {
             Destroy(gameObject);
         }
 
-        //else if (collision.gameObject.CompareTag("Boss"))
-        //{
-        //    Boss b = collision.gameObject.GetComponent<Boss>();
-        //    b.TakeDamage(damage);
-        //    Destroy(gameObject);
-        //}
+
     }
-    private void OnCollisionEnter(Collision collision)
+
+    private void HandlePlayerCollision(Collider collision)
     {
-        //if (collision.gameObject.CompareTag("Bullet"))
-        //{
-        //    Destroy(gameObject);
-        //}
+        Player player = collision.gameObject.GetComponent<Player>();
+        switch (typeOfEnemy)
+        {
+            case TypeOfEnemy.Spider:
+                player.TakeDebuffVelocity(2f, 0.2f);
+                player.TakeDamage(damage);
+                break;
+            case TypeOfEnemy.Vampire:
+                player.TakeDamage(damage);
+                break;
+            case TypeOfEnemy.Bat:
+                //player.TakeDebuffVelocity(2f, 0.2f);
+                player.TakeDamage(damage);
+                break;
+        }
+        Destroy(gameObject);
+    }
+
+    private void HandleEnemyCollision(Collider collision)
+    {
+        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+        if (bulletType == BulletType.Player) // si la bala es del jugador, hace daño al enemigo
+        {
+            enemy.TakeDamage(damage, true); // true porque es daño del jugador
+        }
+        else
+        {
+            enemy.TakeDamage(damage, false); // false porque es daño de un enemigo
+        }
+        Destroy(gameObject);
+    }
+
+    public enum BulletType
+    {
+        Player,
+        Enemy,
+        Boss
+    }
+    public enum TypeOfEnemy
+    {
+        Vampire,
+        Spider,
+        Bat,
+        Player,
+        Dracula,
+        Lican,
+        Gargola
     }
 }

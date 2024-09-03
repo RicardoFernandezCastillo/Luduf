@@ -14,6 +14,8 @@ TagManager:
   - powerLife
   - powerBullet
   - powerRun
+  - powerRUN
+  - Boss
   layers:
   - Default
   - TransparentFX

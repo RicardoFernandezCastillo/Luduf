@@ -1,20 +1,20 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
-public class Enemy : MonoBehaviour
+public class Boss : MonoBehaviour
 {
     // Variables p�blicas configurables
     [Header("Stats")]
     public float speed = 6f;
     public float life = 2f;
     public float maxLife = 2f;
-    public float timeToDestroy = 10f;
+
     public float damage = 1f;
-    public float timeBtwAttack = 1f;
+    public float timeBtwAttack = 2f;
     public Transform firePoint;
     public Transform firePoint2;
     public Transform firePoint3;
@@ -24,9 +24,11 @@ public class Enemy : MonoBehaviour
 
     [Header("Referencias")]
     public GameObject bulletPrefab;
-
     public Rigidbody rb;
-    public EnemyType enemyType;
+    public BossType enemyType;
+
+    public Transform leftRangeMovement;
+    public Transform rightRangeMovement;
 
     [Header("UI")]
     public Slider healthSlider;
@@ -36,7 +38,7 @@ public class Enemy : MonoBehaviour
 
     // Variables privadas
     private float timer = 0f;
-    private bool canAttack = true;
+    private bool canAttack = false;
     private Transform target;
 
     private Player player;
@@ -50,12 +52,31 @@ public class Enemy : MonoBehaviour
     public AudioClip GameOverSound;
     public AudioClip levelUpSound;
 
+    #region BossBehaviourLogic
+
+
+
+
+
+    private Transform objetivo;
+
+    bool isMovingRight = true;
+
+
+    int currentPhase = 1;
+
+    float timerMovement = 0f;
+    float timerBtwMovement = 3.5f;
+
+
+
+    #endregion
 
 
 
     void Start()
     {
-
+        objetivo = rightRangeMovement;
         EnemiesStats();
         PlayerLocation();
         AssignStats();
@@ -63,20 +84,16 @@ public class Enemy : MonoBehaviour
 
     private void EnemiesStats()
     {
-        //timer = timeBtwAttack;
         switch (enemyType)
         {
-            case EnemyType.Vampire:
+            case BossType.Dracula:
                 //speed = Random.Range(2f, 4f);
-                Destroy(gameObject, timeToDestroy);
                 break;
-            case EnemyType.Wolf:
+            case BossType.Licantropo:
                 //speed = Random.Range(4f, 6f);
-                Destroy(gameObject, timeToDestroy);
                 break;
-            case EnemyType.Bat:
+            case BossType.Gargola:
                 //speed = Random.Range(2f, 4f);
-                Destroy(gameObject, timeToDestroy);
                 break;
         }
     }
@@ -84,24 +101,24 @@ public class Enemy : MonoBehaviour
     void AssignStats()
     {
         // cada 3 niveles que el player suba, los enemigos suben de nivel
-        if(player.level % 3 == 0)
+        if (player.level % 3 == 0)
         {
             //segun el tipo de enemigo, se le asignan stats diferentes
             switch (enemyType)
             {
-                case EnemyType.Vampire:
+                case BossType.Dracula:
                     life += 2f;
                     maxLife += 2f;
                     damage += 1f;
                     xpGiven += 2f;
                     break;
-                case EnemyType.Wolf:
+                case BossType.Licantropo:
                     life += 1f;
                     maxLife += 1f;
                     damage += 1f;
                     xpGiven += 1f;
                     break;
-                case EnemyType.Bat:
+                case BossType.Gargola:
                     life += 1f;
                     maxLife += 1;
                     damage += 1f;
@@ -127,56 +144,29 @@ public class Enemy : MonoBehaviour
         HealthCheck();
         switch (enemyType)
         {
-            case EnemyType.Vampire:
-                VampireBehaviour();
+            case BossType.Dracula:
+                DraculaBehaviour();
                 break;
-            case EnemyType.Wolf:
-                WolfBehaviour();
+            case BossType.Licantropo:
+                LycanthropeBehaviour();
                 break;
-            case EnemyType.Bat:
-                BatBehaviour();
+            case BossType.Gargola:
+                GargolaBehaviour();
                 break;
         }
     }
 
-    private void BatBehaviour()
+    private void GargolaBehaviour()
     {
-        Vector3 dir = target.position - transform.position;
-        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, angle, 0);
 
-        if (Vector3.Distance(transform.position, target.position) > 10f)
-        {
-
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        }
-        if (Vector3.Distance(transform.position, target.position) < 10f)
-        {
-            if (timer >= timeBtwAttack)
-            {
-                timer = 0f;
-                // Instanciar bala y asignar a la bala el daño que hace
-
-                Instantiate(bulletPrefab, firePoint.position, transform.rotation);
-                bulletPrefab.GetComponent<Bullet>().bulletType = Bullet.BulletType.Enemy;
-                bulletPrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Bat;
-                //bulletPrefab.GetComponent<Bullet>().damage = 1f;
-
-                //AudioManager.instance.PlaySFX(batAttackSound);
-            }
-            else
-            {
-                timer += Time.deltaTime;
-            }
-        }
     }
 
-    private void WolfBehaviour()
+    private void LycanthropeBehaviour()
     {
         if (target != null)
         {
             //si la distancia entre el enemigo y el jugador es menor a 15 y mayor a 3 el enemigo se mueve hacia el jugador
-            if (Vector3.Distance(transform.position, target.position) > 1.5f && canAttack)
+            if (Vector3.Distance(transform.position, target.position) < 15f && Vector3.Distance(transform.position, target.position) > 3f)
             {
 
                 Vector3 dir = target.position - transform.position;
@@ -187,25 +177,22 @@ public class Enemy : MonoBehaviour
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
             }
             //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
-            if (Vector3.Distance(transform.position, target.position) <= 1.5f)
+            else if (Vector3.Distance(transform.position, target.position) < 3f)
             {
-                if (canAttack)
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+
+                if (canAttack && timer >= timeBtwAttack)
                 {
+                    timer = 0f;
                     Debug.Log("El Lobo Atac�");
-                    player.TakeDamage(damage);
-                    canAttack = false;
+                    // Hacer daño al jugador
+                    MakeDamageToPlayer();
+                    //AudioManager.instance.PlaySFX(wolfAttackSound);
 
                 }
-
-            }
-
-            if (!canAttack)
-            {
-                timer += Time.deltaTime;
-                if (timer >= timeBtwAttack)
+                else
                 {
-                    canAttack = true;
-                    timer = 0f;
+                    timer += Time.deltaTime;
                 }
             }
         }
@@ -223,12 +210,107 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void VampireBehaviour()
+
+
+    private void DraculaBehaviour()
+    {
+        if (life / maxLife > 0.5) //0.83
+        {
+            currentPhase = 1;
+            FirstPhase(); //Primera Fase Ataque apuntado estatico
+        }
+        else //if (life / maxLife > 0.67)
+        {
+            currentPhase = 2;
+            SecondPhase(); //Segunda Fase Ataque apuntado con movimiento del Boss
+        }
+        //else if (life / maxLife > 0.25)
+        //{
+        //    currentPhase = 3;
+        //    ThirdPhase(); // Tercera Fase Ataque multiple estatico 
+
+        ////Increase
+        //}
+        //else if (life / maxLife > 0f) //Ultima Fasw
+        //{
+        //    currentPhase = 4;
+        //    FourPhase();
+        //}
+
+
+
+    }
+
+    private void ThirdPhase()
+    {
+        //Dracula se teletransporta en frente del jugador y lo ataca, luego vuelve a su posicion original
+        if (target != null)
+        {
+            // tranportar a Dracula en frente del jugador es decir a 4 unidades de distancia
+            Transform aux = transform;
+            transform.position = Vector3.MoveTowards(transform.position, target.position, 2f * Time.deltaTime);
+
+        }
+
+    }
+
+    private void SecondPhase()
+    {
+
+        rb.velocity = new Vector3(0, 0, 0);
+        if (target != null)
+        {
+            Vector3 dir = objetivo.position - transform.position;
+            float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+            //Shoot();
+
+
+
+
+            if (timerMovement < timerBtwMovement)
+            {
+                timerMovement += Time.deltaTime;
+                if (isMovingRight)
+                {
+                    objetivo = leftRangeMovement;
+                    //anim.SetFloat("x", -1);
+                }
+                else
+                {
+                    objetivo = rightRangeMovement;
+                    //anim.SetFloat("x", 1);
+                }
+            }
+            else
+            {
+
+                timerMovement = 0;
+                isMovingRight = !isMovingRight;
+                //probabilidad de 30% de teletransportarse
+
+                //if (UnityEngine.Random.Range(0, 100) < 30)
+                //{
+                //    // Calcula la dirección hacia el jugador
+                //    Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+                //    // Calcula la nueva posición
+                //    Vector3 newPosition = player.transform.position - directionToPlayer * 2f;
+
+                //    // Teletransporta a Drácula a la nueva posición
+                //    transform.position = newPosition;
+
+                //    Debug.Log("Dracula se teletransporta");
+                //}
+            }
+        }
+    }
+
+    private void FirstPhase()
     {
         if (target != null)
         {
-            //si la distancia entre el enemigo y el jugador es menor a 15 y mayor a 3 el enemigo se mueve hacia el jugador
-            if ( Vector3.Distance(transform.position, target.position) > 1.5f && canAttack)
+            if (Vector3.Distance(transform.position, target.position) > 1.5f && canAttack)
             {
 
                 Vector3 dir = target.position - transform.position;
@@ -243,13 +325,12 @@ public class Enemy : MonoBehaviour
             {
                 if (canAttack)
                 {
-                    canAttack = false;
-                    Debug.Log("El Vampiro Atac�");
-
+                    Debug.Log("El Jefe Dracula Atac�");
                     player.TakeDamage(damage);
-                    //AudioManager.instance.PlaySFX(vampireAttackSound);
+                    canAttack = false;
 
                 }
+
             }
 
             if (!canAttack)
@@ -261,23 +342,27 @@ public class Enemy : MonoBehaviour
                     timer = 0f;
                 }
             }
+
         }
+
+
     }
+
     void MakeDamageToPlayer()
     {
         player.TakeDamage(damage);
     }
 
-    void Kamikaze()
+    void FourPhase()
     {
-        if (Vector3.Distance(transform.position, target.position) < 15f)
-        {
-            Action();
-        }
-        else
-        {
-            Movement();
-        }
+        //if (Vector3.Distance(transform.position, target.position) < 15f)
+        //{
+        //    Action();
+        //}
+        //else
+        //{
+        //    Movement();
+        //}
     }
     private void Action()
     {
@@ -320,9 +405,15 @@ public class Enemy : MonoBehaviour
         {
             if (p)
             {
+
                 player.IncreaseXp(xpGiven);
             }
             Destroy(gameObject);
+
+
+            FindObjectOfType<Player>().mapLevel++;
+            PlayerPref.SaveStats();
+            SceneManager.LoadScene("PlayerScene");
         }
     }
 
@@ -334,27 +425,12 @@ public class Enemy : MonoBehaviour
         }
 
     }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Vector3 position = transform.position;
-            position.y = transform.position.y; 
-            transform.position = position;
-        }
-        //if (collision.gameObject.CompareTag("Player"))
-        //{
-        //    Player player = collision.gameObject.GetComponent<Player>();
-        //    player.TakeDamage(damage);
-        //    Destroy(gameObject);
-        //}
-    }
 
-    public enum EnemyType
+    public enum BossType
     {
-        Vampire,
-        Wolf,
-        Bat,
-        Spider
+        Dracula,
+        Licantropo,
+        Gargola,
+        Drider
     }
 }

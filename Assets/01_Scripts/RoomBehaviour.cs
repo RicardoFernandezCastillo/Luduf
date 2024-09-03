@@ -91,10 +91,7 @@ public class RoomBehaviour : MonoBehaviour
 				break;
 			case RoomType.BossRoom:
 				CloseDoors();
-                FindObjectOfType<Player>().mapLevel++;
-
-                PlayerPref.SaveStats();
-                SceneManager.LoadScene("PlayerScene");
+				InstanceBoss();
                 break;
 		}
 	}
@@ -216,4 +213,13 @@ public class RoomBehaviour : MonoBehaviour
 			}
 		}
 	}
+	void InstanceBoss()
+	{
+		GameObject boss = Instantiate(prefabEnemy, positions[0].position, positions[0].rotation);
+        Boss bossComponent = boss.GetComponent<Boss>();
+        if (bossComponent != null)
+        {
+			bossComponent.room = this;
+        }
+    }
 }

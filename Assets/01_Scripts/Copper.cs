@@ -24,12 +24,12 @@ public class Copper : MonoBehaviour
     {
         if (isInstanse)
         {
-			int n = Random.Range(0, 10);
-            n = 1;
+			int n = Random.Range(0, 2);
+            //n = 1;
 			if (n == 1)
 			{
 				int p = Random.Range(0, PowerPrefas.Count);
-				Instantiate(PowerPrefas[3], transCopper.position, transCopper.rotation);
+				Instantiate(PowerPrefas[p], transCopper.position, transCopper.rotation);
 			}
 			isInstanse=false;
 		}

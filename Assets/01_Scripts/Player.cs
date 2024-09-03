@@ -25,7 +25,8 @@ public class Player : MonoBehaviour
     private float timerDash = 0f;
     private bool isRechargingDash = false;
 
-
+    //public bool bulletPenetration = false;
+    public float bulletPenetrationProbability = 0.2f;
     public int total_Ammo = 70;
     public int magazineSize = 15;
     public int currentAmmo = 15;
@@ -68,13 +69,15 @@ public class Player : MonoBehaviour
     public List<AudioClip> musicBackground;
     //public AudioClip gam;
 
-
-
-
-
     NewInputSystem inputActions;//--
     Vector2 dir = Vector2.zero;
 
+    #region aux
+        private float timerDebuffVelocity = 0f;
+        private bool isDebuffVelocity = false;
+        private float timeDebuffVelocity = 2f;
+        private float percentDebuffVelocity = 0.2f;
+    #endregion
 
 
     private void Awake()
@@ -102,6 +105,7 @@ public class Player : MonoBehaviour
 
 	void Start()
     {
+
         if (PlayerPrefs.GetInt("level") > level || PlayerPrefs.GetFloat("exp") > exp)
         {
             Debug.Log($"Level = {PlayerPrefs.GetInt("level")}  --- {level} Exp = {PlayerPrefs.GetFloat("exp")} ------- {exp}  ");
@@ -126,7 +130,7 @@ public class Player : MonoBehaviour
         AudioManager.instance.SetMusic(musicBackground[aux]);
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         if (currentAmmo <= 0 && !isReloading && total_Ammo >0)
@@ -157,6 +161,8 @@ public class Player : MonoBehaviour
         RechargeDash();
 
         UpdateSliders(increaseHealth);
+
+        CheckDebuffVelocity();
     }
 
     void UpdateSliders(bool p)
@@ -192,6 +198,8 @@ public class Player : MonoBehaviour
             //AudioManager.instance.PlaySFXDelay(rifleReloadSound, timeToReload);
         }
     }
+
+
     public void IncreaseHealth(float healthToIncrease)
     {
         if (health + healthToIncrease > maxHealth)
@@ -282,9 +290,21 @@ public class Player : MonoBehaviour
 
     void Shoot()
     {
-        if (currentAmmo > 0)
+        if (currentAmmo > 0 && !isReloading)
         {
             AudioManager.instance.PlaySFX(rifleShootSound);
+            // determinar si la bala tiene penetración en base a la probabilidad
+            float random = UnityEngine.Random.Range(0f, 1f);
+
+            if (random <= bulletPenetrationProbability)
+            {
+                bulletPrefab.GetComponent<Bullet>().hasPenetration = true;
+            }
+            else
+            {
+                bulletPrefab.GetComponent<Bullet>().hasPenetration = false;
+            }
+
             Instantiate(bulletPrefab, firePoint.position, transform.rotation);
             currentAmmo--;
             currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
@@ -297,7 +317,8 @@ public class Player : MonoBehaviour
 
     public void AddShoot(int n)
     {      
-       currentAmmo += n;
+       total_Ammo += n;
+        totalAmmoText.text = $"{total_Ammo}";
     }
 
     void Reload()
@@ -346,16 +367,22 @@ public class Player : MonoBehaviour
 
     void Aim()
     {
-        List<Enemy> enemies = new List<Enemy>();
+        List<GameObject> enemies = new List<GameObject>();
         GameObject[] enemiesGo = GameObject.FindGameObjectsWithTag("Enemy"); // Busca todos los objetos con la etiqueta "Enemy" y los guarda en un array
+        // Buscar al Boss y añadirlo a la lista de enemigos
+        GameObject bossGo = GameObject.FindGameObjectWithTag("Boss");
+        if (bossGo != null)
+        {
+            enemies.Add(bossGo);
+        }
         foreach (GameObject go in enemiesGo) 
         {
-            enemies.Add(go.GetComponent<Enemy>());
+            enemies.Add(go);
         }
-        // Busca el enemigo m�s cercano y menos vida
-        Enemy enemyToAttack = null;
+
+        GameObject enemyToAttack = null;
         float minDistance = 15f;
-        foreach (Enemy e in enemies)
+        foreach (GameObject e in enemies)
         {
             float distance = Vector3.Distance(transform.position, e.transform.position);
             if (distance < minDistance)
@@ -382,14 +409,36 @@ public class Player : MonoBehaviour
         HealthCheck(false);
         if (health <= 0)
         {
-            
             //Borrar player prefs
             PlayerPrefs.DeleteAll();
             SceneManager.LoadScene("PlayerScene");
-            //PlayerPrefs.SetInt("Level", level);
-            //PlayerPrefs.SetFloat("Exp", exp);
+        }
+    }
+    
+    public void TakeDebuffVelocity(float timeDebuff, float percent)
+    {
+        isDebuffVelocity = true;
+        percentDebuffVelocity = percent;
+        timeDebuffVelocity = timeDebuff;
+        
+        speed = speed * percentDebuffVelocity;
+
+    }
+    private void CheckDebuffVelocity()
+    {
+        if (isDebuffVelocity)
+        {
+            timerDebuffVelocity += Time.deltaTime;
+            if (timerDebuffVelocity >= timeDebuffVelocity)
+            {
+                timerDebuffVelocity = 0f;
+                isDebuffVelocity = false;
+                speed = speed / percentDebuffVelocity;
+
+            }
 
         }
+
     }
     public void IncreaseXp(float xpToIncrease)
     {
@@ -403,8 +452,13 @@ public class Player : MonoBehaviour
             lvlText.fontStyle = FontStyles.Bold;
             exp = exp - maxExp;
             IncreaseStats();
+            HealthCheck(true);
+            //AudioManager.instance.PlaySFX(levelUpSound);
+
+
         }
         XpCheck();
+
     }
     void IncreaseStats()
     {        
@@ -424,10 +478,16 @@ public class Player : MonoBehaviour
         {
             // la cantidad de balas que se pueden cargar en el cargador
             magazineSize += 5;
+            currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
             
             // aumentar la vida máxima un 5%
-            maxHealth += 0.05f;
+            maxHealth += 1f;
+            health = maxHealth; //---------------- 
+
         }
+        maxExp += 5;
+
+
 
         //maxHealth += 5;
         //health = maxHealth;

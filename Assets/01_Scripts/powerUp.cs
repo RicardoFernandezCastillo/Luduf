@@ -34,7 +34,6 @@ public class powerUp : MonoBehaviour
 				player.IncreaseHealth(1f);
                 break;
 			case powerUps.powerBullet:
-				Debug.Log("Si entro para aniadir Balas");
 				int n = Random.Range(5, 10);
 				player.AddShoot(10);
 				break;
