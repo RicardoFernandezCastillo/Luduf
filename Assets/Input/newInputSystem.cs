@@ -62,6 +62,15 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Melee"",
+                    ""type"": ""Button"",
+                    ""id"": ""b0b0d43b-469e-42b8-8fdf-0440923f01bc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,6 +249,28 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""63af6de6-61c5-43f0-a20c-ba806e5e517a"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Melee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f9f2bbe-e3bf-4b12-af62-4e0cad40cdbe"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Melee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -252,6 +283,7 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -317,6 +349,7 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_Melee;
     public struct PlayerActions
     {
         private @NewInputSystem m_Wrapper;
@@ -325,6 +358,7 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @Melee => m_Wrapper.m_Player_Melee;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -346,6 +380,9 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @Melee.started += instance.OnMelee;
+            @Melee.performed += instance.OnMelee;
+            @Melee.canceled += instance.OnMelee;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -362,6 +399,9 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @Melee.started -= instance.OnMelee;
+            @Melee.performed -= instance.OnMelee;
+            @Melee.canceled -= instance.OnMelee;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -385,5 +425,6 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnMelee(InputAction.CallbackContext context);
     }
 }

@@ -93,7 +93,8 @@ public class Player : MonoBehaviour
         inputActions.Player.Movement.performed += ctx => dir = ctx.ReadValue<Vector2>();
         inputActions.Player.Movement.canceled += ctx => dir = Vector2.zero;
 		inputActions.Player.Shoot.performed += ctx => Shoot(); //Se ejecuta cada ves que dispare
-        inputActions.Player.Reload.performed += ctx => CheckReload(); //Se ejecuta cada ves que dispare
+		inputActions.Player.Melee.performed += ctx => AttackMelle(); //Se ejecuta cada ves que dispare
+		inputActions.Player.Reload.performed += ctx => CheckReload(); //Se ejecuta cada ves que dispare
         inputActions.Player.Dash.performed += ctx => DashMovement(); //Se ejecuta cada ves que dispare
 	}
 
@@ -167,9 +168,11 @@ public class Player : MonoBehaviour
         RechargeDash();
 
         UpdateSliders(increaseHealth);
-
         CheckDebuffVelocity();
-    }
+
+   
+
+	}
 
     void UpdateSliders(bool p)
     {
@@ -337,10 +340,17 @@ public class Player : MonoBehaviour
     }
 
 
+    void AttackMelle()
+    {
+        Debug.Log("Entro");
+	    animator.SetTrigger("Melee");	
+    }
+
+
     public void AddShoot(int n)
     {      
        total_Ammo += n;
-        totalAmmoText.text = $"{total_Ammo}";
+       totalAmmoText.text = $"{total_Ammo}";
     }
 
     void Reload()
