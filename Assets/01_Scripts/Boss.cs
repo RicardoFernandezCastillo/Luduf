@@ -14,18 +14,22 @@ public class Boss : MonoBehaviour
     public float maxLife = 2f;
 
     public float damage = 1f;
-    public float timeBtwAttack = 2f;
+    public float timeBtwFisicAttack = 2f;
+    public float timeBtwRangeAttack = 1f;
     public Transform firePoint;
     public Transform firePoint2;
     public Transform firePoint3;
     public Transform firePoint4;
 
-    private float xpGiven = 5f;
+    private float xpGiven = 20f;
 
     [Header("Referencias")]
-    public GameObject bulletPrefab;
+    public GameObject bulletFirePrefab;
+    public GameObject bulletIcePrefab;
+    //public GameObject bulletFirePrefab;
+    //public GameObject bulletFirePrefab;
     public Rigidbody rb;
-    public BossType enemyType;
+    public BossType bossType;
 
     public Transform leftRangeMovement;
     public Transform rightRangeMovement;
@@ -37,7 +41,8 @@ public class Boss : MonoBehaviour
     public RoomBehaviour room;
 
     // Variables privadas
-    private float timer = 0f;
+    private float timerFisicAttack = 0f;
+    private float timerRangeAttack = 0f;
     private bool canAttack = true;
     private Transform target;
 
@@ -58,14 +63,14 @@ public class Boss : MonoBehaviour
 
 
 
-    private Transform objetivo;
+    //private Transform objetivo;
 
-    bool isMovingRight = true;
+    //bool isMovingRight = true;
 
-    //int currentPhase = 1;
+    ////int currentPhase = 1;
 
-    float timerMovement = 0f;
-    float timerBtwMovement = 3.5f;
+    //float timerMovement = 0f;
+    //float timerBtwMovement = 3.5f;
 
 
 
@@ -75,53 +80,53 @@ public class Boss : MonoBehaviour
 
     void Start()
     {
-        objetivo = rightRangeMovement;
-        EnemiesStats();
+        //objetivo = rightRangeMovement;
+        //EnemiesStats();
         PlayerLocation();
         AssignStats();
     }
 
     private void EnemiesStats()
     {
-        switch (enemyType)
-        {
-            case BossType.Dracula:
-                //speed = Random.Range(2f, 4f);
-                break;
-            case BossType.Licantropo:
-                //speed = Random.Range(4f, 6f);
-                break;
-            case BossType.Gargola:
-                //speed = Random.Range(2f, 4f);
-                break;
+
+        if (player.level % 2 == 0)
+        { 
+        
+        
         }
+
     }
 
     void AssignStats()
     {
         // cada 3 niveles que el player suba, los enemigos suben de nivel
-        if (player.level % 3 == 0)
+        if (player.level % 2 == 0)
         {
             //segun el tipo de enemigo, se le asignan stats diferentes
-            switch (enemyType)
+            switch (bossType)
             {
                 case BossType.Dracula:
-                    life += 2f;
-                    maxLife += 2f;
+                    maxLife = maxLife + maxLife * 0.3f;
+                    life = maxLife;
+
                     damage += 1f;
-                    xpGiven += 2f;
+                    xpGiven = xpGiven + xpGiven * 0.3f;
                     break;
                 case BossType.Licantropo:
                     life += 1f;
                     maxLife += 1f;
                     damage += 1f;
                     xpGiven += 1f;
+
+
                     break;
                 case BossType.Gargola:
                     life += 1f;
                     maxLife += 1;
                     damage += 1f;
                     xpGiven += 1f;
+
+
                     break;
             }
         }
@@ -141,7 +146,7 @@ public class Boss : MonoBehaviour
     void Update()
     {
         HealthCheck();
-        switch (enemyType)
+        switch (bossType)
         {
             case BossType.Dracula:
                 DraculaBehaviour();
@@ -180,9 +185,9 @@ public class Boss : MonoBehaviour
             {
                 transform.rotation = Quaternion.Euler(0, 180, 0);
 
-                if (canAttack && timer >= timeBtwAttack)
+                if (canAttack && timerFisicAttack >= timeBtwFisicAttack)
                 {
-                    timer = 0f;
+                    timerFisicAttack = 0f;
                     Debug.Log("El Lobo Atac�");
                     // Hacer daño al jugador
                     MakeDamageToPlayer();
@@ -191,7 +196,7 @@ public class Boss : MonoBehaviour
                 }
                 else
                 {
-                    timer += Time.deltaTime;
+                    timerFisicAttack += Time.deltaTime;
                 }
             }
         }
@@ -242,6 +247,44 @@ public class Boss : MonoBehaviour
 
     private void ThirdPhase()
     {
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
+        {
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Vector3.Distance(transform.position, target.position) <= 10f)
+        {
+            if (canAttack)
+            {
+                Instantiate(bulletIcePrefab, firePoint.position, transform.rotation);
+                bulletIcePrefab.GetComponent<Bullet>().bulletType = Bullet.BulletType.Boss;
+                bulletIcePrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
+                bulletIcePrefab.GetComponent<Bullet>().damage = damage * 0.5f;
+                bulletIcePrefab.GetComponent<Bullet>().timeVelocityDebuff = 2f;
+                bulletIcePrefab.GetComponent<Bullet>().percentVelocityDebuff = 0.5f;
+
+
+                Instantiate(bulletIcePrefab, firePoint2.position, transform.rotation);
+                Debug.Log("El Jefe Dracula lanzo su ataque");
+                canAttack = false;
+            }
+        }
+        if (!canAttack)
+        {
+            timerRangeAttack += Time.deltaTime;
+            if (timerRangeAttack >= timeBtwRangeAttack)
+            {
+                canAttack = true;
+                timerRangeAttack = 0f;
+            }
+        }
+    }
+
+    private void ThirdPhase33()
+    {
         if (target != null)
         {
             //Shoot();
@@ -281,7 +324,7 @@ public class Boss : MonoBehaviour
 
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
             }
-            //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
+
             if (Vector3.Distance(transform.position, target.position) <= 2.3f)
             {
                 if (canAttack)
@@ -306,32 +349,13 @@ public class Boss : MonoBehaviour
 
             if (!canAttack)
             {
-                timer += Time.deltaTime;
-                if (timer >= timeBtwAttack)
+                timerFisicAttack += Time.deltaTime;
+                if (timerFisicAttack >= timeBtwFisicAttack)
                 {
                     canAttack = true;
-                    timer = 0f;
+                    timerFisicAttack = 0f;
                 }
             }
-
-
-
-
-
-
-            //if (UnityEngine.Random.Range(0, 100) < 30)
-            //{
-            //    // Calcula la dirección hacia el jugador
-            //    Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-
-            //    // Calcula la nueva posición
-            //    Vector3 newPosition = player.transform.position - directionToPlayer * 2f;
-
-            //    // Teletransporta a Drácula a la nueva posición
-            //    transform.position = newPosition;
-
-            //    Debug.Log("Dracula se teletransporta");
-            //}
 
         }
 
@@ -340,43 +364,6 @@ public class Boss : MonoBehaviour
 
     private void SecondPhase()
     {
-
-        Vector3 dir = target.position - transform.position;
-        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, angle, 0);
-
-        if (Vector3.Distance(transform.position, target.position) > 10f)
-        {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        }
-        if (Vector3.Distance(transform.position, target.position) <= 10f)
-        {
-            if (canAttack)
-            {
-                Instantiate(bulletPrefab, firePoint.position, transform.rotation);
-                bulletPrefab.GetComponent<Bullet>().bulletType = Bullet.BulletType.Boss;
-                bulletPrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
-
-                Debug.Log("El Jefe Dracula lanzo su ataque");
-                canAttack = false;
-            }
-        }
-        if (!canAttack)
-        {
-            timer += Time.deltaTime;
-            if (timer >= timeBtwAttack)
-            {
-                canAttack = true;
-                timer = 0f;
-            }
-        }
-    }
-
-    private void FirstPhase()
-    {
-
-
-
         if (target != null)
         {
             if (Vector3.Distance(transform.position, target.position) > 2.3f && canAttack)
@@ -396,6 +383,14 @@ public class Boss : MonoBehaviour
                 {
                     Debug.Log("El Jefe Dracula Ataco");
                     player.TakeDamage(damage);
+                    // el boss se recarga la vida con el mitad del daño
+                    life += damage * 0.5f;
+                    if (maxLife < life)
+                    {
+                        maxLife = life;
+                    }
+                    healthSlider.value = life / maxLife;
+
                     canAttack = false;
 
                 }
@@ -403,16 +398,54 @@ public class Boss : MonoBehaviour
 
             if (!canAttack)
             {
-                timer += Time.deltaTime;
-                if (timer >= timeBtwAttack)
+                timerFisicAttack += Time.deltaTime;
+                if (timerFisicAttack >= timeBtwFisicAttack)
                 {
                     canAttack = true;
-                    timer = 0f;
+                    timerFisicAttack = 0f;
                 }
             }
 
         }
+    }
 
+    private void FirstPhase()
+    {
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
+        {
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Vector3.Distance(transform.position, target.position) <= 10f)
+        {
+            if (canAttack)
+            {
+                Bullet bullet1 = Instantiate(bulletFirePrefab, firePoint2.position, transform.rotation).GetComponent<Bullet>();
+                bullet1.bulletType = Bullet.BulletType.Boss;
+                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
+                bullet1.damage = damage * 2;
+
+                Bullet bullet2 = Instantiate(bulletFirePrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
+                bullet2.bulletType = Bullet.BulletType.Boss;
+                bullet2.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
+                bullet2.damage = damage * 2;
+                Debug.Log("El Jefe Dracula lanzo su ataque");
+                canAttack = false;
+
+            }
+        }
+        if (!canAttack)
+        {
+            timerRangeAttack += Time.deltaTime;
+            if (timerRangeAttack >= timeBtwRangeAttack)
+            {
+                canAttack = true;
+                timerRangeAttack = 0f;
+            }
+        }
 
     }
 
@@ -452,14 +485,14 @@ public class Boss : MonoBehaviour
     }
     void Shoot()
     {
-        if (canAttack && timer >= timeBtwAttack)
+        if (canAttack && timerFisicAttack >= timeBtwFisicAttack)
         {
-            timer = 0f;
-            Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+            timerFisicAttack = 0f;
+            Instantiate(bulletFirePrefab, firePoint.position, transform.rotation);
         }
         else
         {
-            timer += Time.deltaTime;
+            timerFisicAttack += Time.deltaTime;
         }
     }
 

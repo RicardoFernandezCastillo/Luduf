@@ -20,7 +20,9 @@ public class Player : MonoBehaviour
     public float maxExp = 10f;
 
 
-    public int cuantityDashes = 2;
+    public int currentDashes = 2;
+    public int maxCuantityDashes = 2;
+
     public float timeToRechargeDash = 5f;
     private float timerDash = 0f;
     private bool isRechargingDash = false;
@@ -279,10 +281,10 @@ public class Player : MonoBehaviour
     void DashMovement()
     {
         // Dash hacia la dirección del movimiento cuando se presiona la tecla Tab
-        if (cuantityDashes > 0)
+        if (currentDashes > 0)
         {
             rb.AddForce(rb.velocity * 40, ForceMode.Impulse);
-            cuantityDashes--;
+            currentDashes--;
             isRechargingDash = true;
         }
     }
@@ -294,9 +296,9 @@ public class Player : MonoBehaviour
             timerDash += Time.deltaTime;
             if (timerDash >= timeToRechargeDash)
             {
-                if (cuantityDashes < 2)
+                if (currentDashes < maxCuantityDashes) // mientras tenga menos del maximo aumentar el dash
                 {
-                    cuantityDashes++;
+                    currentDashes++;
                 }
                 else
                 {
@@ -437,6 +439,10 @@ public class Player : MonoBehaviour
     
     public void TakeDebuffVelocity(float timeDebuff, float percent)
     {
+        if(timeDebuff<= 0)
+        {
+            return;
+        }
         // si ya hay un debuff de velocidad, se reinicia el timer y no se vuelve a reducir la velocidad
 
         if (!isDebuffVelocity)
@@ -519,8 +525,9 @@ public class Player : MonoBehaviour
             currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
             
             // aumentar la vida máxima un 5%
-            maxHealth += 1f;
-            health = maxHealth; //---------------- 
+            maxHealth = maxHealth + (maxHealth * 0.5f);
+            health = maxHealth;
+            total_Ammo = total_Ammo + 100;
 
         }
         maxExp += 5;

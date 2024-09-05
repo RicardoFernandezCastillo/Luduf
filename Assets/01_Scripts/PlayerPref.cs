@@ -36,7 +36,7 @@ public class PlayerPref : MonoBehaviour
             PlayerPrefs.SetInt("level", player.level);
             PlayerPrefs.SetFloat("exp", player.exp);
             PlayerPrefs.SetFloat("maxExp", player.maxExp);
-            PlayerPrefs.SetInt("cuantityDashes", player.cuantityDashes);
+            PlayerPrefs.SetInt("cuantityDashes", player.currentDashes);
             PlayerPrefs.SetFloat("timeToRechargeDash", player.timeToRechargeDash);
             PlayerPrefs.SetInt("totalAmmo", player.total_Ammo);
             PlayerPrefs.SetInt("mapLevel", player.mapLevel);
@@ -53,7 +53,7 @@ public class PlayerPref : MonoBehaviour
             player.level = PlayerPrefs.GetInt("level", player.level);
             player.exp = PlayerPrefs.GetFloat("exp", player.exp);
             player.maxExp = PlayerPrefs.GetFloat("maxExp", player.maxExp);
-            player.cuantityDashes = PlayerPrefs.GetInt("cuantityDashes", player.cuantityDashes);
+            player.currentDashes = PlayerPrefs.GetInt("cuantityDashes", player.currentDashes);
             player.timeToRechargeDash = PlayerPrefs.GetFloat("timeToRechargeDash", player.timeToRechargeDash);
             player.total_Ammo = PlayerPrefs.GetInt("totalAmmo", player.total_Ammo);
             player.mapLevel = PlayerPrefs.GetInt("mapLevel", player.mapLevel);
@@ -84,7 +84,7 @@ public class PlayerPref : MonoBehaviour
         player.exp = PlayerPrefs.GetFloat("exp", player.exp);
         player.maxExp = PlayerPrefs.GetFloat("maxExp", player.maxExp);
 
-        player.cuantityDashes = PlayerPrefs.GetInt("cuantityDashes", player.cuantityDashes);
+        player.currentDashes = PlayerPrefs.GetInt("cuantityDashes", player.currentDashes);
         player.timeToRechargeDash = PlayerPrefs.GetFloat("timeToRechargeDash", player.timeToRechargeDash);
 
         player.bulletPenetrationProbability = PlayerPrefs.GetFloat("bulletPenetrationProbability", player.bulletPenetrationProbability);
@@ -119,7 +119,7 @@ public class PlayerPref : MonoBehaviour
         PlayerPrefs.SetFloat("exp", player.exp);
         PlayerPrefs.SetFloat("maxExp", player.maxExp);
 
-        PlayerPrefs.SetInt("cuantityDashes", player.cuantityDashes);
+        PlayerPrefs.SetInt("cuantityDashes", player.currentDashes);
         PlayerPrefs.SetFloat("timeToRechargeDash", player.timeToRechargeDash);
 
         PlayerPrefs.SetFloat("bulletPenetrationProbability", player.bulletPenetrationProbability);

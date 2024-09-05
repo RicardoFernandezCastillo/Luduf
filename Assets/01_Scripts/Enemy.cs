@@ -85,7 +85,7 @@ public class Enemy : MonoBehaviour
     void AssignStats()
     {
         // cada 3 niveles que el player suba, los enemigos suben de nivel
-        if(player.level % 3 == 0)
+        if(player.level % 2 == 0)
         {
             //segun el tipo de enemigo, se le asignan stats diferentes
             switch (enemyType)
@@ -108,6 +108,7 @@ public class Enemy : MonoBehaviour
                     damage += 1f;
                     xpGiven += 1f;
                     break;
+                
             }
         }
 

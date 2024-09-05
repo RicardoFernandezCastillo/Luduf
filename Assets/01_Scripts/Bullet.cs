@@ -9,10 +9,16 @@ public class Bullet : MonoBehaviour
     public float timeToDestroy = 4;
     public float damage = 1f;
 
+    public float percentVelocityDebuff = 0.5f;
+    public float timeVelocityDebuff = 2f;
+
+
     public BulletType bulletType;
     public TypeOfEnemy typeOfEnemy;
 
     public bool hasPenetration = false;
+
+    
 
     void Start()
     {
@@ -83,6 +89,11 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
+        //si las balas de los bosses colisionan entre si no destroza ninguna
+        else if (bulletType == BulletType.Boss && collider.gameObject.GetComponent<Bullet>().bulletType == BulletType.Boss)
+        {
+            return;
+        }
         else
         {
             Destroy(gameObject);
@@ -97,7 +108,7 @@ public class Bullet : MonoBehaviour
         switch (typeOfEnemy)
         {
             case TypeOfEnemy.Spider:
-                player.TakeDebuffVelocity(2f, 0.5f);
+                player.TakeDebuffVelocity(timeVelocityDebuff, percentVelocityDebuff);
                 player.TakeDamage(damage);
                 break;
             case TypeOfEnemy.Vampire:
@@ -110,7 +121,9 @@ public class Bullet : MonoBehaviour
 
             //Boses:
             case TypeOfEnemy.Dracula:
-                player.TakeDamage(damage * 0.5f);
+                player.TakeDamage(damage);
+                player.TakeDebuffVelocity(timeVelocityDebuff, percentVelocityDebuff);
+
                 break;
         }
         Destroy(gameObject);
@@ -146,4 +159,5 @@ public class Bullet : MonoBehaviour
         Lican,
         Gargola
     }
+
 }
