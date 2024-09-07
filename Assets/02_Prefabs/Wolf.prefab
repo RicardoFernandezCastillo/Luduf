@@ -464,7 +464,7 @@ MonoBehaviour:
   healthSlider: {fileID: 7254938407952491791}
   room: {fileID: 0}
   vampireAttackSound: {fileID: 0}
-  wolfAttackSound: {fileID: 0}
+  wolfAttackSound: {fileID: 8300000, guid: d167d99216ae6234b81721098923dd4b, type: 3}
   batAttackSound: {fileID: 0}
   playerDeathSound: {fileID: 0}
   GameOverSound: {fileID: 0}

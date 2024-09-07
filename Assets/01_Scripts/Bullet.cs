@@ -125,6 +125,14 @@ public class Bullet : MonoBehaviour
                 player.TakeDebuffVelocity(timeVelocityDebuff, percentVelocityDebuff);
 
                 break;
+
+            case TypeOfEnemy.Lican:
+                break;
+
+            case TypeOfEnemy.Gargola:
+                player.TakeDamage(damage);
+                break;
+
         }
         Destroy(gameObject);
     }

@@ -9146,6 +9146,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   prefabEnemy: {fileID: 6224574607061670520, guid: 49969dcd7b98d3f4395d7289a3a2fee1, type: 3}
+  prefabGargola: {fileID: 3606977068211616611, guid: 2bfadfc71a6248e4bae5882feef9feeb, type: 3}
+  prefabDrider: {fileID: 6233824477150717766, guid: 4d6af51e39cce054da1f4378daa73837, type: 3}
+  prefabLican: {fileID: 6444698110252160037, guid: 216f25e1d73293f48a0f7b53868f4533, type: 3}
+  prefabDracula: {fileID: 6224574607061670520, guid: 49969dcd7b98d3f4395d7289a3a2fee1, type: 3}
   FirePoint: []
   activationDelay: 0.5
   prefCopper: {fileID: 0}

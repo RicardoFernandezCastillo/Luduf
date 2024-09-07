@@ -12,8 +12,8 @@ public class Player : MonoBehaviour
 
     [Header("Stats")]
     public float speed = 4f;
-    public float health = 10f;
-    public float maxHealth = 10f;
+    public float health = 20f;
+    public float maxHealth = 20f;
 
     public int level = 1;
     public float exp = 0f;
@@ -286,7 +286,7 @@ public class Player : MonoBehaviour
         // Dash hacia la dirección del movimiento cuando se presiona la tecla Tab
         if (currentDashes > 0)
         {
-            rb.AddForce(rb.velocity * 40, ForceMode.Impulse);
+            rb.AddForce(rb.velocity * 25, ForceMode.Impulse);
             currentDashes--;
             isRechargingDash = true;
         }

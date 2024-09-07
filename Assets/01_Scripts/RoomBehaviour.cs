@@ -19,6 +19,11 @@ public class RoomBehaviour : MonoBehaviour
 	//public List<GameObject> prefabsEnemys;
 	public GameObject prefabEnemy;
 
+	public GameObject prefabGargola;
+	public GameObject prefabDrider;
+	public GameObject prefabLican;
+	public GameObject prefabDracula;
+
 	//para la Iluminasion
 	public List<GameObject> FirePoint;
 	public float activationDelay = 0.5f;  // Tiempo entre la activación de cada punto.
@@ -108,10 +113,6 @@ public class RoomBehaviour : MonoBehaviour
 			visited = false;
 		}		
 	}
-
-
-
-	
 
 
 	//para poder cerrar las Puestas
@@ -215,11 +216,46 @@ public class RoomBehaviour : MonoBehaviour
 	}
 	void InstanceBoss()
 	{
-		GameObject boss = Instantiate(prefabEnemy, positions[0].position, positions[0].rotation);
-        Boss bossComponent = boss.GetComponent<Boss>();
-        if (bossComponent != null)
+		//Obtener al player para poder instanciar al Boss
+		Player player = FindObjectOfType<Player>();
+		int lvl = player.mapLevel;
+
+        // Existen 8 niveles y hay 4 jefes, por lo que cada jefe aparece en 2, 4, 6 y 8.
+        if (lvl % 8 == 0)
         {
-			bossComponent.room = this;
+            // Dracula
+            Instantiate(prefabDracula, positions[0].position, positions[0].rotation);
         }
+        else if (lvl % 6 == 0)
+        {
+            // Drider
+            Instantiate(prefabDrider, positions[0].position, positions[0].rotation);
+        }
+        else if (lvl % 4 == 0)
+        {
+            // Lican
+            Instantiate(prefabLican, positions[0].position, positions[0].rotation);
+        }
+        else if (lvl % 2 == 0)
+        {
+            // Gargola
+            Instantiate(prefabGargola, positions[0].position, positions[0].rotation);
+        }
+        else
+        {
+            FindObjectOfType<Player>().mapLevel++;
+            PlayerPref.SaveStats();
+            SceneManager.LoadScene("PlayerScene");
+            Debug.Log("No hay boss en este nivel");
+        }
+
+
+
+        //GameObject boss = Instantiate(prefabEnemy, positions[0].position, positions[0].rotation);
+        //      Boss bossComponent = boss.GetComponent<Boss>();
+        //      if (bossComponent != null)
+        //      {
+        //	bossComponent.room = this;
+        //      }
     }
 }

@@ -24,9 +24,10 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    public void PlaySFX(AudioClip sound)
+    public void PlaySFX(AudioClip sound, float volume = 1f)
     {
         //sfxAS.PlayDelayed(0.1f);
+        sfxAS.volume = volume;
         sfxAS.PlayOneShot(sound);
     }
     //public void PlaySFXDelay(AudioClip sound, float timeDelayed)
@@ -35,10 +36,11 @@ public class AudioManager : MonoBehaviour
     //    sfxAS.PlayDelayed(timeDelayed);
     //}
 
-    public void SetMusic(AudioClip music)
+    public void SetMusic(AudioClip music, float musicVolume = 1f)
     {
         musicAS.Stop();
         musicAS.clip = music;
+        musicAS.volume = musicVolume;
         musicAS.Play();
     }
 

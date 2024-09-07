@@ -21,9 +21,11 @@ public class Boss : MonoBehaviour
     public Transform firePoint3;
     public Transform firePoint4;
 
-    private float xpGiven = 20f;
+    public float xpGiven = 20f;
 
     [Header("Referencias")]
+    public GameObject bulletDriderPrefab;
+    public GameObject bulletGargolaPrefab;
     public GameObject bulletFirePrefab;
     public GameObject bulletIcePrefab;
     //public GameObject bulletFirePrefab;
@@ -56,6 +58,8 @@ public class Boss : MonoBehaviour
     public AudioClip playerDeathSound;
     public AudioClip GameOverSound;
     public AudioClip levelUpSound;
+
+    private int currentPhase = 1;
 
     #region BossBehaviourLogic
 
@@ -157,15 +161,256 @@ public class Boss : MonoBehaviour
             case BossType.Gargola:
                 GargolaBehaviour();
                 break;
+            case BossType.Drider:
+                DriderBehaviour();
+                break;
+        }
+    }
+
+    private void DriderBehaviour()
+    {
+        if (life / maxLife > 0.5) //0.83
+        {
+            currentPhase = 1;
+            FirstPhaseDrider(); //Primera Fase Ataque apuntado estatico
+        }
+        else if (life / maxLife >= 0)
+        {
+            if (currentPhase == 1)
+            {
+                timeBtwRangeAttack = timeBtwRangeAttack * 1.7f;
+                currentPhase = 2;
+            }
+            //currentPhase = 2;
+            SecondPhaseDrider(); //Segunda Fase Ataque apuntado con movimiento del Boss
+        }
+        //else if (life / maxLife > 0)
+        //{
+        //    //currentPhase = 3;
+        //    ThirdPhaseDrider(); // Tercera Fase Ataque multiple estatico 
+
+        //}
+    }
+
+    private void ThirdPhaseDrider()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void SecondPhaseDrider()
+    {
+
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
+        {
+
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Vector3.Distance(transform.position, target.position) < 10f)
+        {
+            if (timerRangeAttack >= timeBtwRangeAttack)
+            {
+                timerRangeAttack = 0f;
+
+                // Instanciar bala y asignar a la bala el daño que hace
+                Bullet bullet1 = Instantiate(bulletDriderPrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
+                bullet1.bulletType = Bullet.BulletType.Boss;
+                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Spider;
+                bullet1.timeVelocityDebuff = 2f;
+
+
+                Quaternion rotacionB2 = Quaternion.Euler(0, -13f, 0);
+                Bullet bullet2 = Instantiate(bulletDriderPrefab, firePoint.position, transform.rotation * rotacionB2).GetComponent<Bullet>();
+                bullet2.bulletType = Bullet.BulletType.Boss;
+                bullet2.typeOfEnemy = Bullet.TypeOfEnemy.Spider;
+                bullet2.timeVelocityDebuff = 2f;
+
+
+                Quaternion rotacionB3 = Quaternion.Euler(0, -13f, 0);
+                Bullet bullet3 = Instantiate(bulletDriderPrefab, firePoint.position, transform.rotation * rotacionB3).GetComponent<Bullet>();
+                bullet3.bulletType = Bullet.BulletType.Boss;
+                bullet3.typeOfEnemy = Bullet.TypeOfEnemy.Spider;
+                bullet3.timeVelocityDebuff = 2f;
+
+
+                //bulletPrefab.GetComponent<Bullet>().damage = 1f;
+
+                //AudioManager.instance.PlaySFX(batAttackSound);
+            }
+            else
+            {
+                timerRangeAttack += Time.deltaTime;
+            }
+        }
+    }
+
+    private void FirstPhaseDrider()
+    {
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
+        {
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Vector3.Distance(transform.position, target.position) < 10f)
+        {
+            if (timerRangeAttack >= timeBtwRangeAttack)
+            {
+                timerRangeAttack = 0f;
+                // Instanciar bala y asignar a la bala el daño que hace
+
+                Bullet bullet1 = Instantiate(bulletDriderPrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
+                bullet1.bulletType = Bullet.BulletType.Enemy;
+                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Spider;
+                bullet1.timeVelocityDebuff = 2.5f;
+                bullet1.hasPenetration = true;
+                //bulletPrefab.GetComponent<Bullet>().damage = 1f;
+
+                //AudioManager.instance.PlaySFX(batAttackSound);
+            }
+            else
+            {
+                timerRangeAttack += Time.deltaTime;
+            }
         }
     }
 
     private void GargolaBehaviour()
     {
+        if (life / maxLife > 0.5) //0.83
+        {
+            currentPhase = 1;
+            FirstPhaseGargola(); //Primera Fase Ataque apuntado estatico
+        }
+        else if (life / maxLife >= 0)
+        {
+            if (currentPhase == 1)
+            {
+                timeBtwRangeAttack = timeBtwRangeAttack * 1.7f;
+                currentPhase = 2;
+            }
+            //currentPhase = 2;
+            SecondPhaseGargola(); //Segunda Fase Ataque apuntado con movimiento del Boss
+        }
+        //else if (life / maxLife > 0)
+        //{
+        //    //currentPhase = 3;
+        //    ThirdPhaseDracula(); // Tercera Fase Ataque multiple estatico 
+
+        //}
+    }
+
+    private void SecondPhaseGargola()
+    {
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
+        {
+
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Vector3.Distance(transform.position, target.position) < 10f)
+        {
+            if (timerRangeAttack >= timeBtwRangeAttack)
+            {
+                timerRangeAttack = 0f;
+
+                // Instanciar bala y asignar a la bala el daño que hace
+                Bullet bullet1 = Instantiate(bulletGargolaPrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
+                bullet1.bulletType = Bullet.BulletType.Boss;
+                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Bat;
+
+
+                Quaternion rotacionB2 = Quaternion.Euler(0, -13f, 0);
+                Bullet bullet2 = Instantiate(bulletGargolaPrefab, firePoint.position, transform.rotation * rotacionB2).GetComponent<Bullet>();
+                bullet2.bulletType = Bullet.BulletType.Boss;
+                bullet2.typeOfEnemy = Bullet.TypeOfEnemy.Bat;
+
+                Quaternion rotacionB3 = Quaternion.Euler(0, -13f, 0);
+                Bullet bullet3 = Instantiate(bulletGargolaPrefab, firePoint.position, transform.rotation * rotacionB3).GetComponent<Bullet>();
+                bullet3.bulletType = Bullet.BulletType.Boss;
+                bullet3.typeOfEnemy = Bullet.TypeOfEnemy.Bat;
+
+                //bulletPrefab.GetComponent<Bullet>().damage = 1f;
+
+                //AudioManager.instance.PlaySFX(batAttackSound);
+            }
+            else
+            {
+                timerRangeAttack += Time.deltaTime;
+            }
+        }
+    }
+
+    private void FirstPhaseGargola()
+    {
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        if (Vector3.Distance(transform.position, target.position) > 10f)
+        {
+
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Vector3.Distance(transform.position, target.position) < 10f)
+        {
+            if (timerRangeAttack >= timeBtwRangeAttack)
+            {
+                timerRangeAttack = 0f;
+                // Instanciar bala y asignar a la bala el daño que hace
+
+                Bullet bullet1 = Instantiate(bulletGargolaPrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
+                bullet1.bulletType = Bullet.BulletType.Enemy;
+                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Bat;
+                bullet1.hasPenetration = true;
+                //bulletPrefab.GetComponent<Bullet>().damage = 1f;
+
+                //AudioManager.instance.PlaySFX(batAttackSound);
+            }
+            else
+            {
+                timerRangeAttack += Time.deltaTime;
+            }
+        }
 
     }
 
     private void LycanthropeBehaviour()
+    {
+        if (life / maxLife > 0.5) //0.83
+        {
+            currentPhase = 1;
+            FirstPhaseLycan(); //Primera Fase Ataque apuntado estatico
+        }
+        else if (life / maxLife >= 0f)
+        {
+            if (currentPhase == 1)
+            {
+                speed = speed * 1.3f;
+                damage = damage * 1.3f;
+                timeBtwFisicAttack = timeBtwFisicAttack * 1.3f;
+                currentPhase = 2;
+            }
+            //currentPhase = 2;
+            SecondPhaseLycan(); //Segunda Fase Ataque apuntado con movimiento del Boss
+        }
+        //else if (life / maxLife > 0)
+        //{
+        //    //currentPhase = 3;
+        //    ThirdPhaseLycan(); // Tercera Fase Ataque multiple estatico 
+
+        //}
+    }
+
+    private void SecondPhaseLycan()
     {
         if (target != null)
         {
@@ -188,9 +433,44 @@ public class Boss : MonoBehaviour
                 if (canAttack && timerFisicAttack >= timeBtwFisicAttack)
                 {
                     timerFisicAttack = 0f;
-                    Debug.Log("El Lobo Atac�");
                     // Hacer daño al jugador
-                    MakeDamageToPlayer();
+                    player.TakeDamage(damage);
+                    //AudioManager.instance.PlaySFX(wolfAttackSound);
+
+                }
+                else
+                {
+                    timerFisicAttack += Time.deltaTime;
+                }
+            }
+        }
+    }
+
+    private void FirstPhaseLycan()
+    {
+        if (target != null)
+        {
+            //si la distancia entre el enemigo y el jugador es menor a 15 y mayor a 3 el enemigo se mueve hacia el jugador
+            if (Vector3.Distance(transform.position, target.position) < 15f && Vector3.Distance(transform.position, target.position) > 3f)
+            {
+
+                Vector3 dir = target.position - transform.position;
+                float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0, angle, 0);
+
+
+                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            }
+            //si la distancia entre el enemigo y el jugador es menor a 3 el enemigo se queda quieto
+            else if (Vector3.Distance(transform.position, target.position) < 3f)
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+
+                if (canAttack && timerFisicAttack >= timeBtwFisicAttack)
+                {
+                    timerFisicAttack = 0f;
+                    // Hacer daño al jugador
+                    player.TakeDamage(damage);
                     //AudioManager.instance.PlaySFX(wolfAttackSound);
 
                 }
@@ -214,7 +494,7 @@ public class Boss : MonoBehaviour
         }
 
     }
-
+    
 
 
     private void DraculaBehaviour()
@@ -222,17 +502,17 @@ public class Boss : MonoBehaviour
         if (life / maxLife > 0.75) //0.83
         {
             //currentPhase = 1;
-            FirstPhase(); //Primera Fase Ataque apuntado estatico
+            FirstPhaseDracula(); //Primera Fase Ataque apuntado estatico
         }
-        else if (life / maxLife >= 0.5)
+        else if (life / maxLife >= 0.4)
         {
             //currentPhase = 2;
-            SecondPhase(); //Segunda Fase Ataque apuntado con movimiento del Boss
+            SecondPhaseDracula(); //Segunda Fase Ataque apuntado con movimiento del Boss
         }
         else if (life / maxLife > 0)
         {
             //currentPhase = 3;
-            ThirdPhase(); // Tercera Fase Ataque multiple estatico 
+            ThirdPhaseDracula(); // Tercera Fase Ataque multiple estatico 
 
         }
         //else if (life / maxLife > 0f) //Ultima Fasw
@@ -245,7 +525,7 @@ public class Boss : MonoBehaviour
 
     }
 
-    private void ThirdPhase()
+    private void ThirdPhaseDracula()
     {
         Vector3 dir = target.position - transform.position;
         float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
@@ -362,7 +642,7 @@ public class Boss : MonoBehaviour
 
     }
 
-    private void SecondPhase()
+    private void SecondPhaseDracula()
     {
         if (target != null)
         {
@@ -409,7 +689,7 @@ public class Boss : MonoBehaviour
         }
     }
 
-    private void FirstPhase()
+    private void FirstPhaseDracula()
     {
         Vector3 dir = target.position - transform.position;
         float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
@@ -427,11 +707,14 @@ public class Boss : MonoBehaviour
                 bullet1.bulletType = Bullet.BulletType.Boss;
                 bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
                 bullet1.damage = damage * 2;
+                bullet1.timeVelocityDebuff = 0;
 
                 Bullet bullet2 = Instantiate(bulletFirePrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
                 bullet2.bulletType = Bullet.BulletType.Boss;
                 bullet2.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
                 bullet2.damage = damage * 2;
+                bullet2.timeVelocityDebuff = 0;
+
                 Debug.Log("El Jefe Dracula lanzo su ataque");
                 canAttack = false;
 
@@ -449,10 +732,6 @@ public class Boss : MonoBehaviour
 
     }
 
-    void MakeDamageToPlayer()
-    {
-        player.TakeDamage(damage);
-    }
 
     void FourPhase()
     {
@@ -465,37 +744,6 @@ public class Boss : MonoBehaviour
         //    Movement();
         //}
     }
-    private void Action()
-    {
-        Vector3 dir = target.position - transform.position;
-        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, angle, 0);
-
-        if (rb.velocity.magnitude > 1)
-        {
-            rb.velocity = rb.velocity.normalized;
-        }
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    }
-
-    private void Movement()
-    {
-        transform.rotation = Quaternion.Euler(0, 180, 0);
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    }
-    void Shoot()
-    {
-        if (canAttack && timerFisicAttack >= timeBtwFisicAttack)
-        {
-            timerFisicAttack = 0f;
-            Instantiate(bulletFirePrefab, firePoint.position, transform.rotation);
-        }
-        else
-        {
-            timerFisicAttack += Time.deltaTime;
-        }
-    }
-
 
     public void TakeDamage(float damage, bool p)
     {

@@ -91,6 +91,8 @@ public class PlayerPref : MonoBehaviour
         player.total_Ammo = PlayerPrefs.GetInt("totalAmmo", player.total_Ammo);
         player.currentAmmo = PlayerPrefs.GetInt("currentAmmo", player.currentAmmo);
         player.magazineSize = PlayerPrefs.GetInt("magazineSize", player.magazineSize);
+        player.timeToReload = PlayerPrefs.GetFloat("timeToReload", player.timeToReload);
+
 
         player.mapLevel = PlayerPrefs.GetInt("mapLevel", player.mapLevel);
 
@@ -126,8 +128,11 @@ public class PlayerPref : MonoBehaviour
         PlayerPrefs.SetInt("totalAmmo", player.total_Ammo);
         PlayerPrefs.SetInt("currentAmmo", player.currentAmmo);
         PlayerPrefs.SetInt("magazineSize",player.magazineSize);
+        PlayerPrefs.SetFloat("timeToReload",player.timeToReload);
 
         PlayerPrefs.SetInt("mapLevel", player.mapLevel);
+
+
 
     }
     //private void OnLevelWasLoaded(int level)

@@ -230,6 +230,7 @@ public class Enemy : MonoBehaviour
                     Debug.Log("El Lobo Atac�");
                     animator.SetTrigger("Attack");
                     player.TakeDamage(damage);
+                    AudioManager.instance.PlaySFX(wolfAttackSound, 0.7f);
                     canAttack = false;
                 }
             }
