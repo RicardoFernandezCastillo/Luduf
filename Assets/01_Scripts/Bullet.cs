@@ -59,12 +59,64 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    //private void HandleBulletCollision(Collider collider)
+    //{
+    //    Bullet bulletEntrance = collider.gameObject.GetComponent<Bullet>();
+    //    if (hasPenetration) // si no penetra, se destruye al colisionar con otra bala
+    //    {
+    //        // si ambas balas son penetrantes, no se destruyen
+    //        if (bulletEntrance.hasPenetration)
+    //        {
+    //            return;
+    //        }
+    //        else
+    //        {
+    //            // Si la bala es del jugador y es penetrante y colisiona con una bala enemiga, se destruye la bala enemiga
+    //            if (bulletType == BulletType.Player)
+    //            {
+    //                Destroy(collider.gameObject);
+    //            }
+    //            // Si la bala es de un enemigo y es penetrante y colisiona con una bala del jugador, se destruye la bala del jugador
+    //            else
+    //            {
+    //                Destroy(gameObject);
+    //            }
+    //        }
+
+
+    //    }
+    //    // Si las balas del player colisionan entre si no destroza ninguna
+    //    else if (bulletType == BulletType.Player && bulletEntrance.bulletType == BulletType.Player)
+    //    {
+
+    //        return;
+
+    //    }
+    //    //si las balas de los bosses colisionan entre si no destroza ninguna
+    //    else if (bulletType == BulletType.Boss && collider.gameObject.GetComponent<Bullet>().bulletType == BulletType.Boss)
+    //    {
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+
+
+    //}
+
     private void HandleBulletCollision(Collider collider)
     {
+        Bullet bulletEntrance = collider.gameObject.GetComponent<Bullet>();
+
+        if (bulletEntrance == null)
+        {
+            return; // No hay una bala que comparar, salimos del método
+        }
         if (hasPenetration) // si no penetra, se destruye al colisionar con otra bala
         {
             // si ambas balas son penetrantes, no se destruyen
-            if (collider.gameObject.GetComponent<Bullet>().hasPenetration)
+            if (bulletEntrance.hasPenetration)
             {
                 return;
             }
@@ -73,35 +125,36 @@ public class Bullet : MonoBehaviour
                 // Si la bala es del jugador y es penetrante y colisiona con una bala enemiga, se destruye la bala enemiga
                 if (bulletType == BulletType.Player)
                 {
-                    Destroy(collider.gameObject);
+                    StartCoroutine(DestroyAfterDelay(collider.gameObject));
                 }
                 // Si la bala es de un enemigo y es penetrante y colisiona con una bala del jugador, se destruye la bala del jugador
                 else
                 {
-                    Destroy(gameObject);
+                    StartCoroutine(DestroyAfterDelay(gameObject));
                 }
             }
-
-
         }
         // Si las balas del player colisionan entre si no destroza ninguna
-        else if (bulletType == BulletType.Player && collider.gameObject.GetComponent<Bullet>().bulletType == BulletType.Player)
+        else if (bulletType == BulletType.Player && bulletEntrance.bulletType == BulletType.Player)
         {
             return;
         }
-        //si las balas de los bosses colisionan entre si no destroza ninguna
-        else if (bulletType == BulletType.Boss && collider.gameObject.GetComponent<Bullet>().bulletType == BulletType.Boss)
+        // si las balas de los bosses colisionan entre si no destroza ninguna
+        else if (bulletType == BulletType.Boss && bulletEntrance.bulletType == BulletType.Boss)
         {
             return;
         }
         else
         {
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterDelay(gameObject));
         }
-
-
     }
 
+    private IEnumerator DestroyAfterDelay(GameObject obj)
+    {
+        yield return null; // Espera un frame para permitir que las interacciones se procesen.
+        Destroy(obj);
+    }
     private void HandlePlayerCollision(Collider collision)
     {
         Player player = collision.gameObject.GetComponent<Player>();

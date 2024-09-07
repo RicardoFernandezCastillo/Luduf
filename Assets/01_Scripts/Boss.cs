@@ -229,7 +229,7 @@ public class Boss : MonoBehaviour
                 bullet2.timeVelocityDebuff = 2f;
 
 
-                Quaternion rotacionB3 = Quaternion.Euler(0, -13f, 0);
+                Quaternion rotacionB3 = Quaternion.Euler(0, 13f, 0);
                 Bullet bullet3 = Instantiate(bulletDriderPrefab, firePoint.position, transform.rotation * rotacionB3).GetComponent<Bullet>();
                 bullet3.bulletType = Bullet.BulletType.Boss;
                 bullet3.typeOfEnemy = Bullet.TypeOfEnemy.Spider;
@@ -328,7 +328,7 @@ public class Boss : MonoBehaviour
                 bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Bat;
 
 
-                Quaternion rotacionB2 = Quaternion.Euler(0, -13f, 0);
+                Quaternion rotacionB2 = Quaternion.Euler(0, 13f, 0);
                 Bullet bullet2 = Instantiate(bulletGargolaPrefab, firePoint.position, transform.rotation * rotacionB2).GetComponent<Bullet>();
                 bullet2.bulletType = Bullet.BulletType.Boss;
                 bullet2.typeOfEnemy = Bullet.TypeOfEnemy.Bat;
