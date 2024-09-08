@@ -113,41 +113,48 @@ public class Bullet : MonoBehaviour
         {
             return; // No hay una bala que comparar, salimos del método
         }
-        if (hasPenetration) // si no penetra, se destruye al colisionar con otra bala
-        {
-            // si ambas balas son penetrantes, no se destruyen
-            if (bulletEntrance.hasPenetration)
-            {
-                return;
-            }
-            else
-            {
-                // Si la bala es del jugador y es penetrante y colisiona con una bala enemiga, se destruye la bala enemiga
-                if (bulletType == BulletType.Player)
-                {
-                    StartCoroutine(DestroyAfterDelay(collider.gameObject));
-                }
-                // Si la bala es de un enemigo y es penetrante y colisiona con una bala del jugador, se destruye la bala del jugador
-                else
-                {
-                    StartCoroutine(DestroyAfterDelay(gameObject));
-                }
-            }
-        }
-        // Si las balas del player colisionan entre si no destroza ninguna
-        else if (bulletType == BulletType.Player && bulletEntrance.bulletType == BulletType.Player)
+
+        // Si ambas balas son penetrantes, no se destruyen
+        if (hasPenetration && bulletEntrance.hasPenetration)
         {
             return;
         }
-        // si las balas de los bosses colisionan entre si no destroza ninguna
-        else if (bulletType == BulletType.Boss && bulletEntrance.bulletType == BulletType.Boss)
+
+        // Si la bala del jugador es penetrante y colisiona con una bala enemiga o de jefe no penetrante
+        if (bulletType == BulletType.Player && hasPenetration)
+        {
+            if (!bulletEntrance.hasPenetration)
+            {
+                StartCoroutine(DestroyAfterDelay(collider.gameObject)); // Destruye la bala del enemigo
+            }
+            return; // La bala del jugador no se destruye
+        }
+
+        // Si la bala enemiga o de jefe es penetrante y colisiona con la bala del jugador no penetrante
+        if ((bulletType == BulletType.Enemy || bulletType == BulletType.Boss) && hasPenetration)
+        {
+            if (!bulletEntrance.hasPenetration && bulletEntrance.bulletType == BulletType.Player)
+            {
+                StartCoroutine(DestroyAfterDelay(collider.gameObject)); // Destruye la bala del jugador
+                return; // La bala del jugador se destruye
+            }
+        }
+
+        // Si ambas balas son del jugador, no se destruyen
+        if (bulletType == BulletType.Player && bulletEntrance.bulletType == BulletType.Player)
         {
             return;
         }
-        else
+
+        // Si ambas balas son de jefe, no se destruyen
+        if (bulletType == BulletType.Boss && bulletEntrance.bulletType == BulletType.Boss)
         {
-            StartCoroutine(DestroyAfterDelay(gameObject));
+            return;
         }
+
+        // En cualquier otro caso, destruye ambas balas
+        StartCoroutine(DestroyAfterDelay(gameObject));
+        StartCoroutine(DestroyAfterDelay(collider.gameObject));
     }
 
     private IEnumerator DestroyAfterDelay(GameObject obj)

@@ -145,8 +145,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  timeToDestroy: 4
+  timeToDestroy: 2
   damage: 1
+  percentVelocityDebuff: 0.5
+  timeVelocityDebuff: 2
   bulletType: 1
   typeOfEnemy: 2
   hasPenetration: 0

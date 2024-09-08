@@ -11,11 +11,8 @@ TagManager:
   - Enemy
   - Bullet
   - Copper
-  - powerLife
-  - powerBullet
-  - powerRun
-  - powerRUN
   - Boss
+  - gun
   layers:
   - Default
   - TransparentFX

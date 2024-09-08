@@ -50,9 +50,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d51e5847d90c0479b27454b3ee57be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
-  timeToDestroy: 4
-  damage: 1
+  speed: 6.06
+  timeToDestroy: 2
+  damage: 1.1499999
+  percentVelocityDebuff: 0.5
+  timeVelocityDebuff: 2
   bulletType: 0
   typeOfEnemy: 3
   hasPenetration: 0

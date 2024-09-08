@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
     public float exp = 0f;
     public float maxExp = 10f;
 
+    public int coins = 0;
+    public int tokens = 0;
+
 
     public int currentDashes = 2;
     public int maxCuantityDashes = 2;
@@ -40,10 +43,15 @@ public class Player : MonoBehaviour
 
     public int mapLevel = 1;
 
+    public int isSuperShoot = 0;
+    public int isTripleShoot = 0;
+    public int isMele = 0;
+
     private float lerpSpeed = 0.03f;
     [Header("Referencias")]
     public Rigidbody rb;
     public GameObject bulletPrefab;
+    public GameObject bulletSuperPrefab;
     public Transform firePoint;
 
     [Header("UI")]
@@ -57,7 +65,16 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI currentAmmoText;
     public TextMeshProUGUI totalAmmoText;
 
+    public TextMeshProUGUI mapLevelText;
+    public TextMeshProUGUI tokensText;
+    public TextMeshProUGUI coinText;
 
+    public TextMeshProUGUI tokensTextShop;
+    public TextMeshProUGUI coinTextShop;
+
+    public GameObject SuperShootButton;
+    public GameObject MeleButton;
+    public GameObject TripleShootButton;
 
 
     [Header("Sounds")]
@@ -67,6 +84,7 @@ public class Player : MonoBehaviour
     public AudioClip playerDeathSound;
     public AudioClip GameOverSound;
     public AudioClip levelUpSound;
+    public AudioClip rifeSuperShootSound;
 
     public List<AudioClip> musicBackground;
     //public AudioClip gam;
@@ -96,9 +114,8 @@ public class Player : MonoBehaviour
 		inputActions.Player.Melee.performed += ctx => AttackMelle(); //Se ejecuta cada ves que dispare
 		inputActions.Player.Reload.performed += ctx => CheckReload(); //Se ejecuta cada ves que dispare
         inputActions.Player.Dash.performed += ctx => DashMovement(); //Se ejecuta cada ves que dispare
+        inputActions.Player.PowerShoot.performed += ctx => PowerShoot(); //Se ejecuta cada ves que dispare
 	}
-
-
 
     private void OnEnable()
 	{
@@ -122,9 +139,47 @@ public class Player : MonoBehaviour
         currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
         totalAmmoText.text = $"{total_Ammo}";
         lvlText.text = level.ToString();
+
+        coinText.text = $"Coins: {coins}";
+        coinTextShop.text = $"Coins: {coins}";
+
+        tokensText.text = $"Tokens: {tokens}";
+        tokensTextShop.text = $"Tokens: {tokens}";
+
+        mapLevelText.text = $"{mapLevel}";
+
+
         UpdateMusicBackgroud();
+        CheckButtons();
     }
 
+    public void CheckButtons()
+    {
+        if (isSuperShoot == 1)
+        {
+            SuperShootButton.SetActive(true);
+        }
+        else
+                {
+            SuperShootButton.SetActive(false);
+        }
+        if (isMele == 1)
+        {
+            MeleButton.SetActive(true);
+        }
+        else
+        {
+            MeleButton.SetActive(false);
+        }
+        //if (isTripleShoot == 1)
+        //{
+        //    TripleShootButton.SetActive(true);
+        //}
+        //else
+        //{
+        //    TripleShootButton.SetActive(false);
+        //}
+    }
 
     void UpdateMusicBackgroud()
     {
@@ -319,16 +374,16 @@ public class Player : MonoBehaviour
         {
             AudioManager.instance.PlaySFX(rifleShootSound);
             // determinar si la bala tiene penetración en base a la probabilidad
-            float random = UnityEngine.Random.Range(0f, 1f);
+            //float random = UnityEngine.Random.Range(0f, 1f);
 
-            if (random <= bulletPenetrationProbability)
-            {
-                bulletPrefab.GetComponent<Bullet>().hasPenetration = true;
-            }
-            else
-            {
-                bulletPrefab.GetComponent<Bullet>().hasPenetration = false;
-            }
+            //if (random <= bulletPenetrationProbability)
+            //{
+            //    bulletPrefab.GetComponent<Bullet>().hasPenetration = true;
+            //}
+            //else
+            //{
+            //    bulletPrefab.GetComponent<Bullet>().hasPenetration = false;
+            //}
 
             Instantiate(bulletPrefab, firePoint.position, transform.rotation);
             currentAmmo--;
@@ -338,11 +393,32 @@ public class Player : MonoBehaviour
             //bullet.GetComponent<Bullet>().playerBullet = true;
         }
     }
+    private void PowerShoot()
+    {
+        if (currentAmmo >= 5 && !isReloading)
+        {
+            AudioManager.instance.PlaySFX(rifeSuperShootSound);
 
+            Bullet bullet = Instantiate(bulletSuperPrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
+            bullet.hasPenetration = true;
+            bullet.speed = bullet.speed * 1.5f; // aumentar la velocidad de la bala en un 50%
+
+
+
+            // disminuir 5 balas
+            currentAmmo -= 5;
+            currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
+            animator.SetTrigger("Shoot");
+            isReloading = true;
+            //AudioManager.instance.PlaySFX(rifleReloadSound);
+            //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            //bullet.GetComponent<Bullet>().playerBullet = true;
+        }
+    }
 
     void AttackMelle()
     {
-        Debug.Log("Entro");
+        //Debug.Log("Entro");
 	    animator.SetTrigger("Melee");	
     }
 
@@ -443,6 +519,12 @@ public class Player : MonoBehaviour
         {
             //Borrar player prefs
             PlayerPrefs.DeleteAll();
+            //AudioManager.instance.PlaySFX(playerDeathSound);
+            //Ocultar los botones de la tienda
+            SuperShootButton.SetActive(false);
+            MeleButton.SetActive(false);
+            //TripleShootButton.SetActive(false);
+
             SceneManager.LoadScene("PlayerScene");
         }
     }
@@ -502,6 +584,12 @@ public class Player : MonoBehaviour
         {
             level++;
             lvlText.text = level.ToString();
+
+            //Actualizar monedas
+            coins += 1;
+            coinText.text = $"Coins: {coins}";
+            coinTextShop.text = $"Coins: {coins}";
+
             //hacer el text bold
             lvlText.fontStyle = FontStyles.Bold;
             exp = exp - maxExp;
@@ -535,12 +623,12 @@ public class Player : MonoBehaviour
             currentAmmoText.text = $"{currentAmmo} / {magazineSize}";
             
             // aumentar la vida máxima un 5%
-            maxHealth = maxHealth + (maxHealth * 0.5f);
+            maxHealth = maxHealth + (maxHealth * 0.4f); // aumentar la vida en un 50%
             health = maxHealth;
             total_Ammo = total_Ammo + 100;
 
         }
-        maxExp += 5;
+        maxExp += 10;
 
 
 

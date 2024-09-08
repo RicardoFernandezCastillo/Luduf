@@ -449,9 +449,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  life: 2
-  maxLife: 2
-  timeToDestroy: 10
+  life: 3
+  maxLife: 3
+  timeToDestroy: 100
   damage: 1
   timeBtwAttack: 2
   firePoint: {fileID: 7419998582667071617}

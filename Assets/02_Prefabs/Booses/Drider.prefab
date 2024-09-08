@@ -448,11 +448,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  life: 25
-  maxLife: 25
+  life: 80
+  maxLife: 80
   damage: 4
   timeBtwFisicAttack: 1.5
-  timeBtwRangeAttack: 1.7
+  timeBtwRangeAttack: 1.2
   firePoint: {fileID: 4312229860181750835}
   firePoint2: {fileID: 7839820191619151936}
   firePoint3: {fileID: 0}

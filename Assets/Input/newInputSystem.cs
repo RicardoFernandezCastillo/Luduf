@@ -71,6 +71,15 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PowerShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""2f5a4afa-f4ed-406c-9303-89f47a5d4d77"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -260,6 +269,17 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Melee"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""735a1008-131b-4a8d-a6d0-be72c3b6cca6"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PowerShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -273,6 +293,7 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
+        m_Player_PowerShoot = m_Player.FindAction("PowerShoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,6 +360,7 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Melee;
+    private readonly InputAction m_Player_PowerShoot;
     public struct PlayerActions
     {
         private @NewInputSystem m_Wrapper;
@@ -348,6 +370,7 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Melee => m_Wrapper.m_Player_Melee;
+        public InputAction @PowerShoot => m_Wrapper.m_Player_PowerShoot;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -372,6 +395,9 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
             @Melee.started += instance.OnMelee;
             @Melee.performed += instance.OnMelee;
             @Melee.canceled += instance.OnMelee;
+            @PowerShoot.started += instance.OnPowerShoot;
+            @PowerShoot.performed += instance.OnPowerShoot;
+            @PowerShoot.canceled += instance.OnPowerShoot;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -391,6 +417,9 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
             @Melee.started -= instance.OnMelee;
             @Melee.performed -= instance.OnMelee;
             @Melee.canceled -= instance.OnMelee;
+            @PowerShoot.started -= instance.OnPowerShoot;
+            @PowerShoot.performed -= instance.OnPowerShoot;
+            @PowerShoot.canceled -= instance.OnPowerShoot;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -415,5 +444,6 @@ public partial class @NewInputSystem: IInputActionCollection2, IDisposable
         void OnReload(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnMelee(InputAction.CallbackContext context);
+        void OnPowerShoot(InputAction.CallbackContext context);
     }
 }

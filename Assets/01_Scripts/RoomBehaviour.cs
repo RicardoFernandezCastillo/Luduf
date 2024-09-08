@@ -178,7 +178,7 @@ public class RoomBehaviour : MonoBehaviour
 	{
 		if (other.CompareTag("Player"))
 		{
-			Debug.Log("Player entered room: "+ type);
+			//Debug.Log("Player entered room: "+ type);
 			StartCoroutine(ActivateFirePointsConsecutively());
 			Invoke("TypoRoomInstance", 1f);
 		}

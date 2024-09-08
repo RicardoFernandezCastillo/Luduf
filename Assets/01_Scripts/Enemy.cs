@@ -227,7 +227,7 @@ public class Enemy : MonoBehaviour
             {
                 if (canAttack)
                 {
-                    Debug.Log("El Lobo Atac�");
+                    //Debug.Log("El Lobo Atac�");
                     animator.SetTrigger("Attack");
                     player.TakeDamage(damage);
                     AudioManager.instance.PlaySFX(wolfAttackSound, 0.7f);
@@ -286,7 +286,7 @@ public class Enemy : MonoBehaviour
                 if (canAttack)
                 {
                     canAttack = false;
-                    Debug.Log("El Vampiro Atac�");
+                    //Debug.Log("El Vampiro Atac�");
 
                     player.TakeDamage(damage);
                     //AudioManager.instance.PlaySFX(vampireAttackSound);

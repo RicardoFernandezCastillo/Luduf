@@ -368,8 +368,8 @@ public class Boss : MonoBehaviour
                 // Instanciar bala y asignar a la bala el daño que hace
 
                 Bullet bullet1 = Instantiate(bulletGargolaPrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
-                bullet1.bulletType = Bullet.BulletType.Enemy;
-                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Bat;
+                bullet1.bulletType = Bullet.BulletType.Boss;
+                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Gargola;
                 bullet1.hasPenetration = true;
                 //bulletPrefab.GetComponent<Bullet>().damage = 1f;
 
@@ -525,7 +525,7 @@ public class Boss : MonoBehaviour
 
     }
 
-    private void ThirdPhaseDracula()
+    private void FirstPhaseDracula()
     {
         Vector3 dir = target.position - transform.position;
         float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
@@ -539,15 +539,23 @@ public class Boss : MonoBehaviour
         {
             if (canAttack)
             {
-                Instantiate(bulletIcePrefab, firePoint.position, transform.rotation);
-                bulletIcePrefab.GetComponent<Bullet>().bulletType = Bullet.BulletType.Boss;
-                bulletIcePrefab.GetComponent<Bullet>().typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
-                bulletIcePrefab.GetComponent<Bullet>().damage = damage * 0.5f;
-                bulletIcePrefab.GetComponent<Bullet>().timeVelocityDebuff = 2f;
-                bulletIcePrefab.GetComponent<Bullet>().percentVelocityDebuff = 0.5f;
+                Bullet bullet1 = Instantiate(bulletIcePrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
+                bullet1.bulletType = Bullet.BulletType.Boss;
+                bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
+                bullet1.damage = damage * 0.8f;
+                bullet1.timeVelocityDebuff = 2f;
+                bullet1.speed = speed * 1.5f;
+                bullet1.percentVelocityDebuff = 0.5f;
 
 
-                Instantiate(bulletIcePrefab, firePoint2.position, transform.rotation);
+                Bullet bullet2 = Instantiate(bulletIcePrefab, firePoint2.position, transform.rotation).GetComponent<Bullet>();
+                bullet2.bulletType = Bullet.BulletType.Boss;
+                bullet2.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
+                bullet2.damage = damage * 0.8f;
+                bullet2.timeVelocityDebuff = 2f;
+                bullet2.speed = speed * 1.5f;
+                bullet2.percentVelocityDebuff = 0.5f;
+
                 Debug.Log("El Jefe Dracula lanzo su ataque");
                 canAttack = false;
             }
@@ -664,7 +672,7 @@ public class Boss : MonoBehaviour
                     Debug.Log("El Jefe Dracula Ataco");
                     player.TakeDamage(damage);
                     // el boss se recarga la vida con el mitad del daño
-                    life += damage * 0.5f;
+                    life += damage * 1.5f;
                     if (maxLife < life)
                     {
                         maxLife = life;
@@ -689,7 +697,7 @@ public class Boss : MonoBehaviour
         }
     }
 
-    private void FirstPhaseDracula()
+    private void ThirdPhaseDracula()
     {
         Vector3 dir = target.position - transform.position;
         float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
@@ -708,12 +716,14 @@ public class Boss : MonoBehaviour
                 bullet1.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
                 bullet1.damage = damage * 2;
                 bullet1.timeVelocityDebuff = 0;
+                bullet1.hasPenetration = true;
 
                 Bullet bullet2 = Instantiate(bulletFirePrefab, firePoint.position, transform.rotation).GetComponent<Bullet>();
                 bullet2.bulletType = Bullet.BulletType.Boss;
                 bullet2.typeOfEnemy = Bullet.TypeOfEnemy.Dracula;
                 bullet2.damage = damage * 2;
                 bullet2.timeVelocityDebuff = 0;
+                bullet2.hasPenetration = true;
 
                 Debug.Log("El Jefe Dracula lanzo su ataque");
                 canAttack = false;
@@ -759,10 +769,25 @@ public class Boss : MonoBehaviour
             }
             Destroy(gameObject);
 
+            player.tokens += 1;
+            player.tokensText.text = $"Tokens: {player.tokens}";
+            player.tokensTextShop.text = $"Tokens: {player.tokens}";
 
-            FindObjectOfType<Player>().mapLevel++;
+            player.mapLevel++;
+            player.mapLevelText.text = $"{player.mapLevel}";
             PlayerPref.SaveStats();
-            SceneManager.LoadScene("PlayerScene");
+
+            if (player.mapLevel == 9)
+            {
+                SceneManager.LoadScene("GameOverScene");
+            }
+            else
+            {
+                SceneManager.LoadScene("PlayerScene");
+
+            }
+
+
         }
     }
 

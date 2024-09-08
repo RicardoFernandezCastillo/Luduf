@@ -96,6 +96,13 @@ public class PlayerPref : MonoBehaviour
 
         player.mapLevel = PlayerPrefs.GetInt("mapLevel", player.mapLevel);
 
+        player.isSuperShoot = PlayerPrefs.GetInt("isSupershoot", player.isSuperShoot);
+        player.isTripleShoot = PlayerPrefs.GetInt("isTripleShoot", player.isTripleShoot);
+        player.isMele = PlayerPrefs.GetInt("isMele", player.isMele);
+
+        player.coins = PlayerPrefs.GetInt("coins", player.coins);
+        player.tokens = PlayerPrefs.GetInt("tokens", player.tokens);
+
 
         if (h_aux > PlayerPrefs.GetFloat("health", player.health))
         {
@@ -131,6 +138,13 @@ public class PlayerPref : MonoBehaviour
         PlayerPrefs.SetFloat("timeToReload",player.timeToReload);
 
         PlayerPrefs.SetInt("mapLevel", player.mapLevel);
+
+        PlayerPrefs.SetInt("isSupershoot", player.isSuperShoot);
+        PlayerPrefs.SetInt("isTripleShoot", player.isTripleShoot);
+        PlayerPrefs.SetInt("isMele", player.isMele);
+
+        PlayerPrefs.SetInt("coins",player.coins);
+        PlayerPrefs.SetInt("tokens",player.tokens);
 
 
 

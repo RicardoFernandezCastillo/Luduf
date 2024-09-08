@@ -377,16 +377,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
-  life: 40
-  maxLife: 40
-  damage: 4
+  life: 100
+  maxLife: 100
+  damage: 8
   timeBtwFisicAttack: 1.5
-  timeBtwRangeAttack: 1.7
+  timeBtwRangeAttack: 1
   firePoint: {fileID: 8413068018409149685}
   firePoint2: {fileID: 326328902838377725}
   firePoint3: {fileID: 0}
   firePoint4: {fileID: 0}
-  xpGiven: 20
+  xpGiven: 100
   bulletDriderPrefab: {fileID: 0}
   bulletGargolaPrefab: {fileID: 0}
   bulletFirePrefab: {fileID: 6634631336639487409, guid: a24bdd8c2a2ef6d44b7b2decf5e78c3f, type: 3}
@@ -418,7 +418,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6224574607061670520}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

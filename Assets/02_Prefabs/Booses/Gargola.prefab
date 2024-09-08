@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 2115469962462315029}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0, z: 1.53}
+  m_LocalPosition: {x: -0.01, y: 0, z: 1.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -293,16 +293,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
-  life: 20
-  maxLife: 20
+  life: 30
+  maxLife: 30
   damage: 3.5
   timeBtwFisicAttack: 1.5
-  timeBtwRangeAttack: 1.5
+  timeBtwRangeAttack: 0.8
   firePoint: {fileID: 7221095612163701207}
   firePoint2: {fileID: 3445392583333796784}
   firePoint3: {fileID: 0}
   firePoint4: {fileID: 0}
-  xpGiven: 20
+  xpGiven: 15
   bulletDriderPrefab: {fileID: 0}
   bulletGargolaPrefab: {fileID: 6226612039656427939, guid: cb57d468d3231364f88bf86c6f99a0ca, type: 3}
   bulletFirePrefab: {fileID: 6226612039656427939, guid: cb57d468d3231364f88bf86c6f99a0ca, type: 3}
